@@ -1,4 +1,4 @@
-# TUP 2026 - Programación III - Listador de Alumnos
+# Listado de Alumnos de TUP 2026 - Programación III
 
 ## C7
 ```text
