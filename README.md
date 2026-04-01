@@ -1,4 +1,4 @@
-# Trabajo Práctico — Herramienta CLI: `sortx`
+# Trabajo Práctico 1 — Herramienta CLI: `sortx`
 
 **Materia:** Programación III  
 **Profesor:** Alejandro Di Battista
