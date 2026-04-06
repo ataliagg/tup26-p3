@@ -140,12 +140,25 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
 
 string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
 {
-    foreach (var row in rows)
+    var lines = new List<string>();
+
+    if (rows.Count == 0)
+        return "";
+
+    // Encabezado
+    if (!config.NoHeader)
     {
-        Console.WriteLine(string.Join(" | ", row.Values));
+        var headers = rows[0].Keys;
+        lines.Add(string.Join(config.Delimiter, headers));
     }
 
-    return "";
+    // Filas
+    foreach (var row in rows)
+    {
+        lines.Add(string.Join(config.Delimiter, row.Values));
+    }
+
+    return string.Join("\n", lines);
 }
 
 void WriteOutput(string output, AppConfig config)
