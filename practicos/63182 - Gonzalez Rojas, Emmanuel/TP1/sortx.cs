@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+
 WriteLine(@"
 Indicaciones para usar sortx:
 
@@ -20,3 +21,15 @@ Opciones:
   -nh, --no-header    Indica que no hay encabezado
   -h, --help          Mostrar ayuda
 ");
+
+//MODELOS para configurar y ordenar
+
+record SortField(string Name, bool Numeric, bool Descending);
+
+record AppConfig(
+    string? InputFile,
+    string? OutputFile,
+    string Delimiter,
+    bool NoHeader,
+    List<SortField> SortFields
+);
