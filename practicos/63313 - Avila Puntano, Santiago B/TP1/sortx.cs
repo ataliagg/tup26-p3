@@ -5,3 +5,14 @@
 //       [-nh|--no-header] [-h|--help]
 
 Console.WriteLine($"sortx {string.Join(" ", args)}");
+
+//ingreso config del programa - primer commit
+record SortField(string Name, bool Numeric, bool Descending);
+
+record AppConfig(
+    string?         InputFile,
+    string?         OutputFile,
+    string          Delimiter,
+    bool            NoHeader,
+    List<SortField> SortFields
+);
