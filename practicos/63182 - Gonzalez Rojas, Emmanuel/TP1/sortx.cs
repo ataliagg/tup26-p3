@@ -22,6 +22,7 @@ Opciones:
   -h, --help          Mostrar ayuda
 ");
 
+//Parseo de argumentos
 AppConfig ParsearArgumentos(string[] args)
 {
     string? archivoEntrada = null;
@@ -67,6 +68,14 @@ AppConfig ParsearArgumentos(string[] args)
     return new AppConfig(archivoEntrada, archivoSalida, delimitador, sinEncabezado, camposOrden);
 }
 
+//LECTURA de archivos de entrada
+string LeerEntrada(AppConfig config)
+{
+    if (config.InputFile != null)
+        return File.ReadAllText(config.InputFile);
+
+    return Console.In.ReadToEnd();
+}
 
 //MODELOS para configurar y ordenar
 
