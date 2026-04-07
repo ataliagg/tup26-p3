@@ -1,10 +1,9 @@
-using static system.Console;
 using System;
 using System.IO;
 using System.Collections.Generic;
 
 
-WriteLine(@"
+Console.WriteLine(@"
 Indicaciones para usar sortx:
 
 sortx [archivoEntrada [archivoSalida]] -b campo[:tipo[:orden]]
@@ -147,6 +146,7 @@ string[] Separar(string linea, string delimitador)
     return linea.Split(new string[] { delimitador }, StringSplitOptions.None);
 }
 
+//Ordenar multiples campos
 (List<Dictionary<string, string>> Filas, List<string> Encabezados) OrdenarFilas(
     (List<Dictionary<string, string>> Filas, List<string> Encabezados) datos,
     AppConfig config)
@@ -203,6 +203,44 @@ int Comparar(Dictionary<string, string> a, Dictionary<string, string> b, List<So
 
     return 0;
 }
+
+//Serializacion de datos
+string Serializar(
+    (List<Dictionary<string, string>> Filas, List<string> Encabezados) datos,
+    AppConfig config)
+{
+    var lineas = new List<string>();
+
+    if (!config.NoHeader)
+    {
+        lineas.Add(string.Join(config.Delimiter, datos.Encabezados));
+    }
+
+    foreach (var fila in datos.Filas)
+    {
+        var valores = new List<string>();
+
+        foreach (var h in datos.Encabezados)
+        {
+            valores.Add(fila[h]);
+        }
+
+        lineas.Add(string.Join(config.Delimiter, valores));
+    }
+
+    return string.Join(Environment.NewLine, lineas);
+}
+
+//salida de datos
+void EscribirSalida(string texto, AppConfig config)
+{
+    if (config.OutputFile != null)
+        File.WriteAllText(config.OutputFile, texto);
+    else
+        Console.WriteLine(texto);
+}
+
+
 
 //MODELOS para configurar y ordenar
 
