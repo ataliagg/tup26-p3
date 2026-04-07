@@ -22,6 +22,52 @@ Opciones:
   -h, --help          Mostrar ayuda
 ");
 
+AppConfig ParsearArgumentos(string[] args)
+{
+    string? archivoEntrada = null;
+    string? archivoSalida = null;
+    string delimitador = ",";
+    bool sinEncabezado = false;
+
+    var camposOrden = new List<SortField>();
+
+    for (int i = 0; i < args.Length; i++)
+    {
+        switch (args[i])
+        {
+            case "-i":
+            case "--input":
+                archivoEntrada = args[++i];
+                break;
+
+            case "-o":
+            case "--output":
+                archivoSalida = args[++i];
+                break;
+
+            case "-d":
+            case "--delimiter":
+                var d = args[++i];
+                delimitador = d == "\\t" ? "\t" : d;
+                break;
+
+            case "-nh":
+                sinEncabezado = true;
+                break;
+
+            case "-b":
+                camposOrden.Add(ParsearCampoOrden(args[++i]));
+                break;
+        }
+    }
+
+    if (camposOrden.Count == 0)
+        throw new Exception("Debe especificar un campo de ordenamiento");
+
+    return new AppConfig(archivoEntrada, archivoSalida, delimitador, sinEncabezado, camposOrden);
+}
+
+
 //MODELOS para configurar y ordenar
 
 record SortField(string Name, bool Numeric, bool Descending);
