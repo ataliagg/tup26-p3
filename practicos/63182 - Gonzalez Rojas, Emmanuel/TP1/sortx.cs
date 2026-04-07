@@ -147,6 +147,62 @@ string[] Separar(string linea, string delimitador)
     return linea.Split(new string[] { delimitador }, StringSplitOptions.None);
 }
 
+(List<Dictionary<string, string>> Filas, List<string> Encabezados) OrdenarFilas(
+    (List<Dictionary<string, string>> Filas, List<string> Encabezados) datos,
+    AppConfig config)
+{
+    var filas = datos.Filas;
+
+    foreach (var campo in config.SortFields)
+    {
+        if (!datos.Encabezados.Contains(campo.Name))
+            throw new Exception($"El campo '{campo.Name}' no existe");
+    }
+
+    for (int i = 0; i < filas.Count - 1; i++)
+    {
+        for (int j = 0; j < filas.Count - i - 1; j++)
+        {
+            if (Comparar(filas[j], filas[j + 1], config.SortFields) > 0)
+            {
+                var temp = filas[j];
+                filas[j] = filas[j + 1];
+                filas[j + 1] = temp;
+            }
+        }
+    }
+
+    return datos;
+}
+
+int Comparar(Dictionary<string, string> a, Dictionary<string, string> b, List<SortField> campos)
+{
+    foreach (var campo in campos)
+    {
+        string valA = a[campo.Name];
+        string valB = b[campo.Name];
+
+        int resultado;
+
+        if (campo.Numeric)
+        {
+            double numA = double.TryParse(valA, out var na) ? na : 0;
+            double numB = double.TryParse(valB, out var nb) ? nb : 0;
+            resultado = numA.CompareTo(numB);
+        }
+        else
+        {
+            resultado = string.Compare(valA, valB, StringComparison.Ordinal);
+        }
+
+        if (resultado != 0)
+        {
+            return campo.Descending ? -resultado : resultado;
+        }
+    }
+
+    return 0;
+}
 
 //MODELOS para configurar y ordenar
 
