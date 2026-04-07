@@ -108,7 +108,7 @@ string LeerEntrada(AppConfig config)
         encabezados.Add(p);
         
         
-      var filas = new List<Dictionary<string, string>>();
+  var filas = new List<Dictionary<string, string>>();
 
       for (int i = 1; i < lineas.Count; i++)
         {
@@ -124,7 +124,10 @@ string LeerEntrada(AppConfig config)
    return (filas, encabezados);
 }
 
-
+string[] Separar(string linea, string delimitador)
+{
+    return linea.Split(new string[] { delimitador }, StringSplitOptions.None);
+}
 //MODELOS para configurar y ordenar
 
 record SortField(string Name, bool Numeric, bool Descending);
