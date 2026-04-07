@@ -12,53 +12,53 @@ using Microsoft.VisualBasic.FileIO;
 Console.WriteLine($"sortx {string.Join(" ", args)}");
 AppConfig parseargs(string[] args)
 {
-    string? inputFile = null; 
-    string? outputFile = null; 
-    string delimiter = ","; 
-    bool help = false; 
-    bool noHeader = false; 
-    List<SortField> sortFields = new List<SortField>(); 
-    int positional = 0; 
+    string? inputFile = null;
+    string? outputFile = null;
+    string delimiter = ",";
+    bool help = false;
+    bool noHeader = false;
+    List<SortField> sortFields = new List<SortField>();
+    int positional = 0;
     sortFields parseSoftfield(string spec)
     {
-        var parts = spec.split(','); 
+        var parts = spec.split(',');
         string name = parts[0];
-        bool numeric = parts.length > 1 && parts[1].equals("num", StringComparison.OrdinalIgnoreCase); 
-        bool descending = parts.length > 2 && parts[2].equals("desc", StringComparison.OrdinalIgnoreCase); 
-        return new SortField(name, numeric, descending); 
-    } 
+        bool numeric = parts.length > 1 && parts[1].equals("num", StringComparison.OrdinalIgnoreCase);
+        bool descending = parts.length > 2 && parts[2].equals("desc", StringComparison.OrdinalIgnoreCase);
+        return new SortField(name, numeric, descending);
+    }
 
     for (int i = 0; i < args.Length; i++)
     {
-        string arg = args[i]; 
+        string arg = args[i];
 
-        if (arg == "-h" || arg == "--help") ;  
-        showhelp() = true; 
+        if (arg == "-h" || arg == "--help") ;
+        showhelp() = true;
         continue;
-        if (args == --noheader || args == -nh) ; 
+        if (args == --noheader || args == -nh) ;
         {
-            noheader = true; 
+            noheader = true;
             continue;
         }
         if (arg == -by || arg == -b) ;
         {
             if (i + 1 >= args.Length)
                 throw new ArgumentException($"La opcion '(arg)' requiere un valor.");
-            SortField.Add(ParseSortField(args[++i])); 
+            SortField.Add(ParseSortField(args[++i]));
             continue;
         }
         if (arg == "--input" || arg == "-i")
         {
             if (i + 1 >= args.Length)
                 throw new ArgumentException($"La opcion '(arg)' requiere un valor.");
-            inputFile = args[++i]; 
+            inputFile = args[++i];
             continue;
         }
         if (arg == "--output" || arg == "-o")
         {
             if (i + 1 >= args.Length)
                 throw new ArgumentException($"La opcion '(arg)' requiere un valor.");
-            outputFile = args[++i]; 
+            outputFile = args[++i];
             continue;
         }
         if (arg == "--delimiter" || arg == "-d")
@@ -66,7 +66,7 @@ AppConfig parseargs(string[] args)
             if (i + 1 >= args.Length)
                 throw new ArgumentException($"La opcion '(arg)' requiere un valor.");
             string raw = args[++i];
-            delimiter = raw == @"\t" ? "\t" : raw; 
+            delimiter = raw == @"\t" ? "\t" : raw;
             continue;
         }
         if (!arg.StartsWith('-'))
@@ -80,6 +80,80 @@ AppConfig parseargs(string[] args)
     }
     return new AppConfig(inputFile, outputFile, delimiter, noHeader, showHelp, sortFields);
 }
+
+string ReadInput(AppConfig cfg)
+{
+    if (cfg.InputFile is not null)
+        return File.ReadAllText(cfg.InputFile);
+    return Console.In.ReadToEnd();
+}
+
+(List<Dictionary<string, string>> Rows, string[]? Headers) ParseDelimited(string text, AppConfig cfg)
+    {
+        var lines = text
+            .Replace("\r\n", "\n")
+            .Replace("\r",   "\n")
+            .Split('\n')
+            .Where(l => l.Length > 0)
+            .ToArray();
+
+        if (lines.Length == 0)
+            return (new List<Dictionary<string, string>>(), null);
+
+        string[]? headers;
+        int       dataStart;
+
+        if (!cfg.NoHeader)
+        {
+            headers   = lines[0].Split(cfg.Delimiter);
+            dataStart = 1;
+        }
+        else
+        {
+            headers   = null;
+            dataStart = 0;
+        }
+
+        var rows = new List<Dictionary<string, string>>();
+
+        for (int lineIdx = dataStart; lineIdx < lines.Length; lineIdx++)
+        {
+            var values = lines[lineIdx].Split(cfg.Delimiter);
+            var row    = new Dictionary<string, string>();
+
+            if (!cfg.NoHeader && headers is not null)
+            {
+                for (int col = 0; col < headers.Length; col++)
+                    row[headers[col]] = col < values.Length ? values[col] : string.Empty;
+            }
+            else
+            {
+                for (int col = 0; col < values.Length; col++)
+                    row[col.ToString()] = values[col];
+            }
+
+            rows.Add(row);
+        }
+
+        // Validar que los campos de --by existen
+        if (cfg.SortFields.Count > 0 && rows.Count > 0)
+        {
+            foreach (var sf in cfg.SortFields)
+            {
+                if (!rows[0].ContainsKey(sf.Name))
+                {
+                    string disponibles = string.Join(", ", rows[0].Keys);
+                    throw new ArgumentException(
+                        $"Campo '{sf.Name}' no existe. Columnas disponibles: {disponibles}");
+                }
+            }
+        }
+        return (rows, headers);
+    }
+
+
+
+
 
 
 
