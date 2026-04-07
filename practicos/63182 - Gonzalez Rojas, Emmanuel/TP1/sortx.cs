@@ -102,7 +102,7 @@ string LeerEntrada(AppConfig config)
      
      
      var encabezados = new List<string>();
-    var partes = lineas[0].Split(',');
+    var partes = Separar(lineas[0], config.Delimiter);
 
     foreach (var p in partes)
         encabezados.Add(p);
@@ -112,7 +112,7 @@ string LeerEntrada(AppConfig config)
 
       for (int i = 1; i < lineas.Count; i++)
         {
-            var valores = lineas[i].Split(',');
+            var valores = Separar(lineas[i], config.Delimiter);
             var fila = new Dictionary<string, string>();
 
             for (int j = 0; j < encabezados.Count; j++)
@@ -128,6 +128,8 @@ string[] Separar(string linea, string delimitador)
 {
     return linea.Split(new string[] { delimitador }, StringSplitOptions.None);
 }
+
+
 //MODELOS para configurar y ordenar
 
 record SortField(string Name, bool Numeric, bool Descending);
