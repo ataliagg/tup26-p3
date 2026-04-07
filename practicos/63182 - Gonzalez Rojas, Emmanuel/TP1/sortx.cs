@@ -109,7 +109,7 @@ string LeerEntrada(AppConfig config)
         
         
       var filas = new List<Dictionary<string, string>>();
-      
+
       for (int i = 1; i < lineas.Count; i++)
         {
             var valores = lineas[i].Split(',');
@@ -121,7 +121,7 @@ string LeerEntrada(AppConfig config)
             filas.Add(fila);
         }
 
-   
+   return (filas, encabezados);
 }
 
 
