@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-
 try
 {
     var config = ParsearArgumentos(args);
@@ -16,24 +12,6 @@ catch (Exception ex)
     Console.Error.WriteLine($"Error: {ex.Message}");
     Environment.Exit(1);
 }
-
-Console.WriteLine(@"
-Indicaciones para usar sortx:
-
-sortx [archivoEntrada [archivoSalida]] -b campo[:tipo[:orden]]
-
-Ejemplo:
-sortx empleados.csv -b apellido
-sortx empleados.csv -b edad:num:desc
-
-Opciones:
-  -b, --by            Campo de ordenamiento
-  -i, --input         Archivo de entrada
-  -o, --output        Archivo de salida
-  -d, --delimiter     Delimitador (ej: , | \t)
-  -nh, --no-header    Indica que no hay encabezado
-  -h, --help          Mostrar ayuda
-");
 
 //Parseo de argumentos
 AppConfig ParsearArgumentos(string[] args)
@@ -66,11 +44,24 @@ AppConfig ParsearArgumentos(string[] args)
                 break;
 
             case "-nh":
+            case "--no-header":
                 sinEncabezado = true;
                 break;
 
             case "-b":
+            case "--by":
                 camposOrden.Add(ParsearCampoOrden(args[++i]));
+                break;
+
+            case "-h":
+            case "--help":
+                MostrarAyuda();
+                Environment.Exit(0);
+                break;
+
+            default:
+                if (archivoEntrada == null) archivoEntrada = args[i];
+                else if (archivoSalida == null) archivoSalida = args[i];
                 break;
         }
     }
@@ -255,6 +246,26 @@ void EscribirSalida(string texto, AppConfig config)
 }
 
 
+void MostrarAyuda()
+{
+    Console.WriteLine(@"
+Indicaciones para usar sortx:
+
+sortx [archivoEntrada [archivoSalida]] -b campo[:tipo[:orden]]
+
+Ejemplo:
+sortx empleados.csv -b apellido
+sortx empleados.csv -b edad:num:desc
+
+Opciones:
+  -b, --by            Campo de ordenamiento
+  -i, --input         Archivo de entrada
+  -o, --output        Archivo de salida
+  -d, --delimiter     Delimitador (ej: , | \t)
+  -nh, --no-header    Indica que no hay encabezado
+  -h, --help          Mostrar ayuda
+");
+}
 
 //MODELOS para configurar y ordenar
 
