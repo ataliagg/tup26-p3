@@ -20,7 +20,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Aqui va el codigo principal
+        // Mostrar ayuda si se pide
+        if (args.Contains("-h") || args.Contains("--help"))
+        {
+            MostrarAyuda();
+            return;
+        }
+
+        // Aqui va el resto del codigo
     }
 
     static void MostrarAyuda()
