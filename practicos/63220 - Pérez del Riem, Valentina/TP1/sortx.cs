@@ -188,3 +188,68 @@ string ReadInput(AppConfig config)
 
     return Console.In.ReadToEnd();
 }
+
+// 3. ParseDelimited
+
+(List<string> Headers, List<Dictionary<string, string>> Rows) ParseDelimited(string texto, AppConfig config)
+{
+    List<string> lineas = texto
+        .Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries)
+        .ToList();
+
+    if (lineas.Count == 0)
+        return (new List<string>(), new List<Dictionary<string, string>>());
+
+    List<string> headers = new List<string>();
+    List<Dictionary<string, string>> filas = new List<Dictionary<string, string>>();
+
+    if (config.NoHeader == false)
+    {
+        headers = lineas[0].Split(config.Delimiter).ToList();
+
+        for (int i = 1; i < lineas.Count; i++)
+        {
+            string[] valores = lineas[i].Split(config.Delimiter);
+
+            if (valores.Length != headers.Count)
+                throw new Exception("La línea tiene distinta cantidad de columnas: " + lineas[i]);
+
+            Dictionary<string, string> fila = new Dictionary<string, string>();
+
+            for (int j = 0; j < headers.Count; j++)
+            {
+                fila[headers[j]] = valores[j];
+            }
+
+            filas.Add(fila);
+        }
+    }
+    else
+    {
+        string[] primeraFila = lineas[0].Split(config.Delimiter);
+
+        for (int i = 0; i < primeraFila.Length; i++)
+        {
+            headers.Add(i.ToString());
+        }
+
+        for (int i = 0; i < lineas.Count; i++)
+        {
+            string[] valores = lineas[i].Split(config.Delimiter);
+
+            if (valores.Length != headers.Count)
+                throw new Exception("La línea tiene distinta cantidad de columnas: " + lineas[i]);
+
+            Dictionary<string, string> fila = new Dictionary<string, string>();
+
+            for (int j = 0; j < headers.Count; j++)
+            {
+                fila[headers[j]] = valores[j];
+            }
+
+            filas.Add(fila);
+        }
+    }
+
+    return (headers, filas);
+}
