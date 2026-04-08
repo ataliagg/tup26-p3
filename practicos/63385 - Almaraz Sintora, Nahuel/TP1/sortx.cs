@@ -213,6 +213,14 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
         return sb.ToString();
     }
 
+void WriteOutput(string text, AppConfig cfg)
+    {
+        if (cfg.OutputFile is not null)
+            File.WriteAllText(cfg.OutputFile, text);
+        else
+            Console.Write(text);
+    }
+
 
 
 
