@@ -95,7 +95,14 @@ AppConfig parseargs(string[] args)
 
     return new AppConfig(inputFile, outputFile, delimiter, noHeader, showHelp, sortFields);
 
-
+}
+string readinput(AppConfig cfg)
+{
+    //  se verifica que el archivo cfg no sea null (los datos parseadso)
+    if(cfg.InputFile == null) 
+      return File.ReadAllText(cfg.InputFile); 
+      return Console.In.ReadToEnd(); 
+} 
 
 
 
