@@ -72,6 +72,17 @@ AppConfig ParseArgs(string[] args)
             }
 
             delimiter = args[i + 1];
+
+            if (delimiter == "\\t")
+            {
+                delimiter = "\t";
+            }
+
+            if (delimiter == "")
+            {
+                throw new Exception("El delimitador no puede ser vacío.");
+            }
+
             i++;
         }
         else if (a == "-nh" || a == "--no-header")
