@@ -87,4 +87,14 @@ class Program
 
         return new Configuracion(entrada, salida, delimitador, tieneEncabezado, criterios);
     }
+
+    static List<string> LeerArchivo(string archivo)
+    {
+        return File.ReadAllLines(archivo).ToList();
+    }
+
+    static void EscribirArchivo(string archivo, List<string> lineas)
+    {
+        File.WriteAllLines(archivo, lineas);
+    }
 }
