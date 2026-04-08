@@ -63,10 +63,48 @@ class Program
     }
 }
 
-    static List<Dictionary<string, string>> ParseDelimited(string text, AppConfig config)
+   static List<Dictionary<string, string>> ParseDelimited(string text, AppConfig config)
+{
+    var rows = new List<Dictionary<string, string>>();
+    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+    if (lines.Length == 0)
+        return rows;
+
+    var delimiter = config.Delimiter;
+    string[] headers;
+
+    int startIndex = 0;
+
+    if (!config.NoHeader)
     {
-        return new List<Dictionary<string, string>>();
+        headers = lines[0].Trim().Split(delimiter);
+        startIndex = 1;
     }
+    else
+    {
+        var firstLine = lines[0].Trim().Split(delimiter);
+        headers = new string[firstLine.Length];
+
+        for (int i = 0; i < headers.Length; i++)
+            headers[i] = i.ToString();
+    }
+
+    for (int i = startIndex; i < lines.Length; i++)
+    {
+        var values = lines[i].Trim().Split(delimiter);
+        var dict = new Dictionary<string, string>();
+
+        for (int j = 0; j < headers.Length && j < values.Length; j++)
+        {
+            dict[headers[j]] = values[j];
+        }
+
+        rows.Add(dict);
+    }
+
+    return rows;
+}
 
     static List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows, AppConfig config)
     {
