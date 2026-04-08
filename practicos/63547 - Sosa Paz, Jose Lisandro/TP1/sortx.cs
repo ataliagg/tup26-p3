@@ -23,12 +23,20 @@ foreach (string fila in File.ReadLines(rutaArchivo))
 
 string parametro = args.Length > 0 ? args[0] : "--apellido";
 
+
 IEnumerable<Empleado> nominaOrdenada = parametro switch
 {
     "--sueldo" => nomina.OrderByDescending(x => x.Sueldo),
     "--nombre" => nomina.OrderBy(x => x.Nombre),
     _ => nomina.OrderBy(x => x.Apellido)
 };
+
+Console.WriteLine("--- Listado Procesado ---");
+foreach (Empleado e in nominaOrdenada)
+{
+    Console.WriteLine($"{e.Apellido.ToUpper()}, {e.Nombre} - Salario: ${e.Sueldo}");
+}
+
 public class Empleado
 {
     public string Nombre { get; set; }
