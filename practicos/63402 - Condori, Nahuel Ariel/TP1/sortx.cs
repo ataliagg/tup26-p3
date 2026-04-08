@@ -73,3 +73,19 @@ AppConfig? ParseArgs(string[] args)
             positionalIndex++;
         }
     }
+
+    string ReadInput(AppConfig config)
+{
+    if (!string.IsNullOrEmpty(config.InputFile))
+    {
+        if (!File.Exists(config.InputFile))
+            throw new Exception($"El archivo de entrada no existe: {config.InputFile}");
+        return File.ReadAllText(config.InputFile);
+    }
+
+    // Si no hay archivo definido por argumentos, intentamos leer desde la consola (stdin)
+    if (Console.IsInputRedirected)
+        return Console.In.ReadToEnd();
+
+    throw new Exception("No se especificó archivo de entrada ni se detectó un flujo de texto en stdin.");
+}
