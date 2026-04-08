@@ -73,7 +73,8 @@ AppConfig? ParseArgs(string[] args)
             positionalIndex++;
         }
     }
-
+    return new AppConfig(input, output, delimiter, noHeader, sortFields);
+}
     string ReadInput(AppConfig config)
 {
     if (!string.IsNullOrEmpty(config.InputFile))
@@ -197,3 +198,13 @@ void WriteOutput(string outputText, AppConfig config)
         Console.Write(outputText);
     }
 }
+
+record SortField(string Name, bool Numeric, bool Descending);
+
+record AppConfig(
+    string? InputFile,
+    string? OutputFile,
+    string Delimiter,
+    bool NoHeader,
+    List<SortField> SortFields);
+    
