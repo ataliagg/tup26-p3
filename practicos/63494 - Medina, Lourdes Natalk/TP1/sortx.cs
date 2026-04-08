@@ -222,7 +222,6 @@ void PrintHelp()
     Console.WriteLine("  -nh, --no-header   Sin encabezado");
     Console.WriteLine("  -h, --help         Mostrar ayuda");
 }
-
 record SortField(string Name, bool Numeric, bool Descending);
 
 record AppConfig(
@@ -231,4 +230,5 @@ record AppConfig(
     string Delimiter,
     bool NoHeader,
     List<SortField> SortFields
+
 );
