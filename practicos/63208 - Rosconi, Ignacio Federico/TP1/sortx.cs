@@ -84,3 +84,28 @@ void PrintHelp()
 {
     throw new NotImplementedException();
 }
+
+static AppConfig ParseArgs(string[] args)
+{
+    string? input = null;
+    string? output = null;
+    bool descending = false;
+    List<SortField> sortFields = new();
+
+    foreach (var arg in args)
+    {
+        if (arg.StartsWith("--input="))
+            input = arg.Replace("--input=", "");
+
+        else if (arg.StartsWith("--output="))
+            output = arg.Replace("--output=", "");
+
+        else if (arg == "--desc")
+            descending = true;
+    }
+
+    if (input == null || output == null)
+        throw new ArgumentException("Debe especificar --input y --output");
+
+    return new AppConfig(input, output, descending, sortFields);
+}
