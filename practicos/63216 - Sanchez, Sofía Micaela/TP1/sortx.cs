@@ -1,7 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
-// sortx [input [output]] [-b|--by campo[:tipo[:orden]]]...
-//       [-i|--input input] [-o|--output output]
-//       [-d|--delimiter delimitador]
-//       [-nh|--no-header] [-h|--help]
+try
+{
+    Console.WriteLine("sortx iniciado");
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine("Error: " + ex.Message);
+    Environment.Exit(1);
+}
 
-Console.WriteLine($"sortx {string.Join(" ", args)}");
+record SortField(string Name, bool Numeric, bool Descending);
+
+record AppConfig(
+    string? InputFile,
+    string? OutputFile,
+    string Delimiter,
+    bool NoHeader,
+    List<SortField> SortFields
+);
