@@ -78,15 +78,15 @@ AppConfig ParseArgs(string[] args)
 
 string ReadInput(AppConfig config)
 {
-    if (!string.IsNullOrEmpty(config.InputFile))
+    if (string.IsNullOrEmpty(config.InputFile))
     {
-        if (!File.Exists(config.InputFile))
+        if (File.Exists(config.InputFile))
             throw new Exception("El archivo de entrada no existe");
 
         return File.ReadAllText(config.InputFile);
     }
 
-    if (!Console.IsInputRedirected)
+    if (Console.IsInputRedirected)
         throw new Exception("No hay entrada por stdin");
 
     return Console.In.ReadToEnd();
