@@ -202,5 +202,38 @@ switch
 return ordered.ToList();
 }
 
+//Ejercicio 5
+
+string Serialize(List<Dictionary<string, string>> rows,
+string[]? headers,
+AppConfig cfg)
+{
+
+var sb = new System.Text.StringBuilder();
+
+if (!cfg.NoHeader && headers is not null)
+{
+
+sb.AppendLine(string.Join(cfg.Delimitador, headers));
+
+foreach ( var row in rows)
+{
+
+ var values = headers.Select(h => row.TryGetValue(h, out string? v) ? v : string.Empty);
+ sb.AppendLine(string.Join(cfg.Delimitador, values));
+}
+}
+else
+{
+    foreach (var row in rows)
+    {
+        var values = row.Values;
+        sb.AppendLine(string.Join(cfg.Delimitador, values));
+    }
+}
+
+return sb.ToString();
+}
+
 
 }
