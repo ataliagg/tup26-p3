@@ -174,22 +174,22 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
     return ordered?.ToList() ?? rows;
 }
 
-string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
-{
-    if (!rows.Any())
-        return "";
+    string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
+    {
+        if (!rows.Any())
+            return "";
 
-    var sb = new StringBuilder();
-    var headers = rows.First().Keys.ToList();
+        var sb = new StringBuilder();
+        var headers = rows.First().Keys.ToList();
 
-    if (!config.NoHeader)
-        sb.AppendLine(string.Join(config.Delimiter, headers));
+        if (!config.NoHeader)
+            sb.AppendLine(string.Join(config.Delimiter, headers));
 
-    foreach (var row in rows)
-        sb.AppendLine(string.Join(config.Delimiter, headers.Select(h => row[h])));
+        foreach (var row in rows)
+            sb.AppendLine(string.Join(config.Delimiter, headers.Select(h => row[h])));
 
-    return sb.ToString();
-}
+        return sb.ToString();
+    }
 
 void WriteOutput(string content, AppConfig config)
 {
