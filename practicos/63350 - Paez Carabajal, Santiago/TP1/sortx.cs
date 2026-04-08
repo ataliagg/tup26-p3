@@ -211,14 +211,14 @@ void WriteOutput(string? file, string content)
         File.WriteAllText(file, content);
 }
 
-//  HELP 
+//  HELPp
 
 void PrintHelp()
 {
     Console.WriteLine("Uso: sortx [input] -b campo[:tipo[:orden]]");
 }
 
-//  MODELOS 
+//  MODELOSs
 
 record SortField(string Name, bool Numeric, bool Descending);
 
