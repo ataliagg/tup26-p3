@@ -1,5 +1,4 @@
-nombre,departamento,salario
-Juan,Sistemas,1000
-Ana,Ventas,1200
-Pedro,Sistemas,1500
-Luis,Ventas,1100
+nombre;edad
+Juan;20
+Ana;25
+Pedro;18

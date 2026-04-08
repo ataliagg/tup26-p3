@@ -29,6 +29,8 @@ AppConfig ParseArgs(string[] args)
 {
     string? input = null;
     string? output = null;
+    string delimiter = ",";
+    bool noHeader = false;
     var sortFields = new List<SortField>();
 
     for (int i = 0; i < args.Length; i++)
@@ -60,6 +62,20 @@ AppConfig ParseArgs(string[] args)
             output = args[i + 1];
             i++;
         }
+        else if (a == "-d" || a == "--delimiter")
+        {
+            if (i + 1 >= args.Length)
+            {
+                throw new Exception("Falta delimitador después de -d");
+            }
+
+            delimiter = args[i + 1];
+            i++;
+        }
+        else if (a == "-nh" || a == "--no-header")
+        {
+            noHeader = true;
+        }
         else if (a == "-b" || a == "--by")
         {
             if (i + 1 >= args.Length)
@@ -75,16 +91,34 @@ AppConfig ParseArgs(string[] args)
 
             if (partes.Length >= 2)
             {
-                if (partes[1] == "num") numeric = true;
-                else if (partes[1] == "alpha") numeric = false;
-                else throw new Exception("Tipo inválido");
+                if (partes[1] == "num")
+                {
+                    numeric = true;
+                }
+                else if (partes[1] == "alpha")
+                {
+                    numeric = false;
+                }
+                else
+                {
+                    throw new Exception("Tipo inválido");
+                }
             }
 
             if (partes.Length >= 3)
             {
-                if (partes[2] == "desc") descending = true;
-                else if (partes[2] == "asc") descending = false;
-                else throw new Exception("Orden inválido");
+                if (partes[2] == "desc")
+                {
+                    descending = true;
+                }
+                else if (partes[2] == "asc")
+                {
+                    descending = false;
+                }
+                else
+                {
+                    throw new Exception("Orden inválido");
+                }
             }
 
             sortFields.Add(new SortField(nombre, numeric, descending));
@@ -107,8 +141,8 @@ AppConfig ParseArgs(string[] args)
     return new AppConfig(
         input,
         output,
-        ",",
-        false,
+        delimiter,
+        noHeader,
         sortFields
     );
 }
@@ -142,15 +176,34 @@ string ReadInput(AppConfig config)
         return (headers, rows);
     }
 
-    var primeraLinea = lineas[0].Trim();
-    var encabezados = primeraLinea.Split(config.Delimiter);
+    int inicioDatos = 0;
 
-    foreach (var encabezado in encabezados)
+    if (config.NoHeader)
     {
-        headers.Add(encabezado.Trim());
+        var primeraLinea = lineas[0].Trim();
+        var camposPrimeraLinea = primeraLinea.Split(config.Delimiter);
+
+        for (int i = 0; i < camposPrimeraLinea.Length; i++)
+        {
+            headers.Add(i.ToString());
+        }
+
+        inicioDatos = 0;
+    }
+    else
+    {
+        var primeraLinea = lineas[0].Trim();
+        var encabezados = primeraLinea.Split(config.Delimiter);
+
+        foreach (var encabezado in encabezados)
+        {
+            headers.Add(encabezado.Trim());
+        }
+
+        inicioDatos = 1;
     }
 
-    for (int i = 1; i < lineas.Length; i++)
+    for (int i = inicioDatos; i < lineas.Length; i++)
     {
         var linea = lineas[i].Trim();
 
@@ -247,7 +300,10 @@ string Serialize(
 {
     var lineas = new List<string>();
 
-    lineas.Add(string.Join(config.Delimiter, headers));
+    if (!config.NoHeader)
+    {
+        lineas.Add(string.Join(config.Delimiter, headers));
+    }
 
     foreach (var fila in data)
     {
@@ -286,9 +342,13 @@ void WriteOutput(AppConfig config, string text)
 void ShowHelp()
 {
     Console.WriteLine("Uso: sortx [opciones] [input] [output]");
-    Console.WriteLine("  -h, --help   Muestra ayuda");
-    Console.WriteLine("  -b, --by     Campo de ordenamiento");
-    Console.WriteLine("               Formato: campo[:alpha|num[:asc|desc]]");
+    Console.WriteLine("  -h, --help              Muestra ayuda");
+    Console.WriteLine("  -i, --input             Archivo de entrada");
+    Console.WriteLine("  -o, --output            Archivo de salida");
+    Console.WriteLine("  -d, --delimiter         Delimitador");
+    Console.WriteLine("  -nh, --no-header        Indica que no hay encabezado");
+    Console.WriteLine("  -b, --by                Campo de ordenamiento");
+    Console.WriteLine("                          Formato: campo[:alpha|num[:asc|desc]]");
 }
 
 
