@@ -246,6 +246,38 @@ void WriteOutput(string output, AppConfig config)
 {
     Console.WriteLine(output);
 }
+
+SortField ParseSortField(string spec)
+{
+    var parts = spec.Split(':');
+
+    var name = parts[0];
+
+    bool numeric = false;
+    bool desc = false;
+
+    if (parts.Length > 1)
+    {
+        numeric = parts[1] switch
+        {
+            "num" => true,
+            "alpha" => false,
+            _ => throw new Exception($"Tipo inválido: {parts[1]}")
+        };
+    }
+
+    if (parts.Length > 2)
+    {
+        desc = parts[2] switch
+        {
+            "desc" => true,
+            "asc" => false,
+            _ => throw new Exception($"Orden inválido: {parts[2]}")
+        };
+    }
+
+    return new SortField(name, numeric, desc);
+}
 record SortField(string Name, bool Numeric, bool Descending);
 
 record AppConfig(
