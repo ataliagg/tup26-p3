@@ -162,4 +162,44 @@ try{
         return (rows, headers);
     }
 
+    //Ejercicio 4
+
+List<Dictionary<string, string>> SortRows(
+List<Dictionary<string, string>> rows,
+List<SortField> sortFields)
+{
+if (sortFields.Count == 0 || rows.Count == 0)
+return rows;
+
+double NumKey(Dictionary<string, string> row, string nombre) =>
+double.TryParse(row[nombre]),
+System.Globalization.NumberStyles.Any,
+System.Globalization.CultureInfo.InvariantCulture, out double d) ? d : 0.0;
+
+SortFields primero = sortFields[0];
+
+IOrderedEnumerable<Dictionary<string, string>>ordered = (primero.Numeric, primero.Descender) switch
+{
+(true, true) => rows.OrderByDescender(r => NumKey(r, primero.Nombre)),
+(true, false) => rows.OrderBy(r => NumKey(r, primero.Nombre)),
+(false, true) => rows.OrderByDescender(r => r[primero.Nombre], StringComparer.OrdinalIgnoreCase),
+(false, false) => rows.OrderBy(r => [primero.Nombre], StringComparer.OrdinalIgnoreCase),
+};
+for (int i = 1; i < sortFields.Count; i++)
+{
+SortField sf = sortFields[i];
+ordered = (sf.Numeric, sf.Descender) 
+switch
+{
+(true, true) => ordered.ThenByDescender(r => NumKey(r, sf.Nombre)),
+(true, false) => ordered.ThenBy(r => NumKey(r, sf.Nombre)),
+(false, true) => ordered.ThenByDescender(r => r[sf.Nombre], StringComparer.OrdinalIgnoreCase),
+(false, false) => ordered.ThenBy(r => r[sf.Nombre], StringComparer.OrdinalIgnoreCase),
+};
+}
+
+return ordered.ToList();
+}
+
+
 }
