@@ -90,3 +90,11 @@ static void GuardarArchivo(string ruta, List<string> lineas)
 {
     File.WriteAllLines(ruta, lineas);
 }
+
+static List<string> OrdenarLineas(List<string> lineas, Configuracion config)
+{
+    if (config.Descendente)
+        return lineas.OrderByDescending(x => x).ToList();
+
+    return lineas.OrderBy(x => x).ToList();
+}
