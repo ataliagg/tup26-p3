@@ -7,7 +7,9 @@ using System.Text;
 try
 {
     var config = ParseArgs(args);
-    Console.WriteLine("Argumentos procesados");
+    var texto = ReadInput(config);
+    var filas = ParseDelimited(texto, config);
+    Console.WriteLine($"Filas leídas: {filas.Count}");
 }
 catch (Exception ex)
 {
@@ -17,33 +19,20 @@ catch (Exception ex)
 
 AppConfig ParseArgs(string[] args)
 {
-    string? input = null;
-    string? output = null;
-    string delimiter = ",";
-    bool noHeader = false;
-    var camposOrden = new List<SortField>();
-    var posicionales = new List<string>();
-
-    for (int i = 0; i < args.Length; i++)
-    {
-        var arg = args[i];
-
-        switch (arg)
-        {
-            case "-h":
-            case "--help":
-                ShowHelp();
-                Environment.Exit(0);
-                break;
-        }
-    }
-
-    return new AppConfig(input, output, delimiter, noHeader, camposOrden);
+    return new AppConfig(null, null, ",", false, new List<SortField>());
 }
 
-void ShowHelp()
+string ReadInput(AppConfig config)
 {
-    Console.WriteLine("Uso: sortx");
+    if (Console.IsInputRedirected)
+        return Console.In.ReadToEnd();
+
+    return "";
+}
+
+List<Dictionary<string, string>> ParseDelimited(string texto, AppConfig config)
+{
+    return new List<Dictionary<string, string>>();
 }
 
 record SortField(string Name, bool Numeric, bool Descending);
