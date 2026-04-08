@@ -222,7 +222,7 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
         }
     }
 
-    return ordered.ToList();
+    return ordered?.ToList() ?? rows;
 }
 string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
 {
