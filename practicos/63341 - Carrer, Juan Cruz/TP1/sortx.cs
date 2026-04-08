@@ -95,6 +95,26 @@ AppConfig ParseArgs(string[] args)
 
     return new AppConfig(input, output, delimiter, noHeader, sortFields);
 }
+
+void ShowHelp()
+{
+    Console.WriteLine(@"
+Uso:
+  sortx [input [output]] -b campo[:tipo[:orden]]...
+
+Opciones:
+  -b, --by           Campo de ordenamiento
+  -i, --input        Archivo de entrada
+  -o, --output       Archivo de salida
+  -d, --delimiter    Delimitador (default ,)
+  -nh, --no-header   Sin encabezado
+  -h, --help         Mostrar ayuda
+
+Ejemplos:
+  sortx empleados.csv -b apellido
+  sortx empleados.csv -b salario:num:desc
+");
+}
 record SortField(string Name, bool Numeric, bool Descending);
 
 record AppConfig(
