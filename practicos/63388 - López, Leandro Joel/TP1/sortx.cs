@@ -88,4 +88,13 @@ try{
 
     }
 
+    //Ejercicio 2
+    
+    string ReadEntrada(AppConfig cfg)
+    {
+        if (cfg.entrada is not null)
+        return File.ReadAllText(cfg.entrada);
+        return Console.In.ReadToEnd();
+    }
+
 }
