@@ -1,7 +1,17 @@
+using System.Text;
 
-// sortx [input [output]] [-b|--by campo[:tipo[:orden]]]...
-//       [-i|--input input] [-o|--output output]
-//       [-d|--delimiter delimitador]
-//       [-nh|--no-header] [-h|--help]
+try
+{
+    var config = ParseArgs(args);
+    var text = ReadInput(config.InputFile);
+    var (headers, rows) = ParseDelimited(text, config);
+    var sorted = SortRows(rows, headers, config);
+    var output = Serialize(headers, sorted, config);
+    WriteOutput(config.OutputFile, output);
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"Error: {ex.Message}");
+    Environment.Exit(1);
+}
 
-Console.WriteLine($"sortx {string.Join(" ", args)}");
