@@ -26,6 +26,9 @@ catch (Exception ex)
 
 AppConfig ParseArgs(string[] args)
 {
+    string? inputFile = null;
+    string? outputFile = null;
+
     foreach (var a in args)
     {
         if (a == "-h" || a == "--help")
@@ -33,11 +36,26 @@ AppConfig ParseArgs(string[] args)
             ShowHelp();
             Environment.Exit(0);
         }
+       // ignorar "--"
+        if (a == "--")
+        {
+            continue;
+        }
+
+        // argumentos posicionales
+        if (inputFile == null)
+        {
+            inputFile = a;
+        }
+        else if (outputFile == null)
+        {
+            outputFile = a;
+        }
     }
 
     return new AppConfig(
-        null,
-        null,
+        inputFile,
+        outputFile,
         ",",
         false,
         new List<SortField>()
