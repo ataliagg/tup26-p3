@@ -4,6 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 
 string rutaArchivo = "empleados.csv"; 
+
+if (!File.Exists(rutaArchivo))
+{
+    Console.WriteLine("No se pudo localizar el archivo de datos.");
+    return;
+}
+
 List<Empleado> nomina = new List<Empleado>();
 
 foreach (string fila in File.ReadLines(rutaArchivo))
