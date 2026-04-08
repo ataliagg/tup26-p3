@@ -226,7 +226,22 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
 }
 string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
 {
-    return "";
+    if (rows.Count == 0)
+        return "";
+
+    var sb = new StringBuilder();
+    var headers = rows[0].Keys.ToList();
+
+    if (!config.NoHeader)
+        sb.AppendLine(string.Join(config.Delimiter, headers));
+
+    foreach (var row in rows)
+    {
+        var values = headers.Select(h => row[h]);
+        sb.AppendLine(string.Join(config.Delimiter, values));
+    }
+
+    return sb.ToString();
 }
 
 void WriteOutput(string output, AppConfig config)
