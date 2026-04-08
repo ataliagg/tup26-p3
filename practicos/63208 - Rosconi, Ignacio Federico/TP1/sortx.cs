@@ -122,3 +122,24 @@ static void WriteOutput(string outputPath, List<string> lines)
 {
     File.WriteAllLines(outputPath, lines);
 }
+
+static List<string> SortData(List<string> lines, AppConfig config)
+{
+    if (config.SortFields.Count == 0)
+        return lines;
+
+    var sortField = config.SortFields[0];
+
+    if (sortField.Descending)
+    {
+        return lines
+            .OrderByDescending(line => line)
+            .ToList();
+    }
+    else
+    {
+        return lines
+            .OrderBy(line => line)
+            .ToList();
+    }
+}
