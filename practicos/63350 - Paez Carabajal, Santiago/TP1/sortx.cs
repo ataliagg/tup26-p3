@@ -108,7 +108,7 @@ SortField ParseSortField(string text)
     return new SortField(name, numeric, desc);
 }
 
-//  PASO 2 
+ // lectura del archivo de entrada
 
 string ReadInput(string? file)
 {
