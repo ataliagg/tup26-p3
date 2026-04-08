@@ -189,46 +189,52 @@ List<Dictionary<string, string>> SortRows(
         return data;
     }
 
-    var field = config.SortFields[0];
-
     data.Sort(CompararFilas);
 
     return data;
 
     int CompararFilas(Dictionary<string, string> a, Dictionary<string, string> b)
     {
-        var valorA = "";
-        var valorB = "";
-
-        if (a.ContainsKey(field.Name))
+        foreach (var field in config.SortFields)
         {
-            valorA = a[field.Name];
+            var valorA = "";
+            var valorB = "";
+
+            if (a.ContainsKey(field.Name))
+            {
+                valorA = a[field.Name];
+            }
+
+            if (b.ContainsKey(field.Name))
+            {
+                valorB = b[field.Name];
+            }
+
+            int resultado = 0;
+
+            if (field.Numeric)
+            {
+                var numeroA = int.Parse(valorA);
+                var numeroB = int.Parse(valorB);
+                resultado = numeroA.CompareTo(numeroB);
+            }
+            else
+            {
+                resultado = string.Compare(valorA, valorB);
+            }
+
+            if (field.Descending)
+            {
+                resultado = resultado * -1;
+            }
+
+            if (resultado != 0)
+            {
+                return resultado;
+            }
         }
 
-        if (b.ContainsKey(field.Name))
-        {
-            valorB = b[field.Name];
-        }
-
-        int resultado;
-
-        if (field.Numeric)
-        {
-            var numeroA = int.Parse(valorA);
-            var numeroB = int.Parse(valorB);
-            resultado = numeroA.CompareTo(numeroB);
-        }
-        else
-        {
-            resultado = string.Compare(valorA, valorB);
-        }
-
-        if (field.Descending)
-        {
-            resultado = resultado * -1;
-        }
-
-        return resultado;
+        return 0;
     }
 }
 
