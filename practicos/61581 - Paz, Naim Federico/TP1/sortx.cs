@@ -47,8 +47,46 @@ AppConfig ParseArgs(string[] args)
                 throw new Exception("Falta el campo despues de -b o --by");
             }
 
-            var fieldName = args[i + 1];
-            sortFields.Add(new SortField(fieldName, false, false));
+            var textoCampo = args[i + 1];
+            var partes = textoCampo.Split(':');
+
+            var nombre = partes[0];
+            var numeric = false;
+            var descending = false;
+
+            if (partes.Length >= 2)
+            {
+                if (partes[1] == "num")
+                {
+                    numeric = true;
+                }
+                else if (partes[1] == "alpha")
+                {
+                    numeric = false;
+                }
+                else
+                {
+                    throw new Exception("Tipo de orden invalido. Use alpha o num.");
+                }
+            }
+
+            if (partes.Length >= 3)
+            {
+                if (partes[2] == "desc")
+                {
+                    descending = true;
+                }
+                else if (partes[2] == "asc")
+                {
+                    descending = false;
+                }
+                else
+                {
+                    throw new Exception("Orden invalido. Use asc o desc.");
+                }
+            }
+
+            sortFields.Add(new SortField(nombre, numeric, descending));
             i++;
         }
         else if (a == "--")
@@ -172,7 +210,25 @@ List<Dictionary<string, string>> SortRows(
             valorB = b[field.Name];
         }
 
-        return string.Compare(valorA, valorB);
+        int resultado;
+
+        if (field.Numeric)
+        {
+            var numeroA = int.Parse(valorA);
+            var numeroB = int.Parse(valorB);
+            resultado = numeroA.CompareTo(numeroB);
+        }
+        else
+        {
+            resultado = string.Compare(valorA, valorB);
+        }
+
+        if (field.Descending)
+        {
+            resultado = resultado * -1;
+        }
+
+        return resultado;
     }
 }
 
@@ -218,6 +274,7 @@ void ShowHelp()
     Console.WriteLine("Uso: sortx [opciones] [input] [output]");
     Console.WriteLine("  -h, --help   Muestra ayuda");
     Console.WriteLine("  -b, --by     Campo de ordenamiento");
+    Console.WriteLine("               Formato: campo[:alpha|num[:asc|desc]]");
 }
 
 
