@@ -115,3 +115,15 @@ static void Main(string[] args)
         Console.WriteLine($"Error: {ex.Message}");
     }
 }
+
+static void MostrarAyuda()
+{
+    Console.WriteLine("Uso del programa:");
+    Console.WriteLine("  ordenador --entrada=archivo.txt --salida=resultado.txt [--desc]");
+    Console.WriteLine();
+    Console.WriteLine("Opciones:");
+    Console.WriteLine("  --entrada=RUTA     Archivo de entrada");
+    Console.WriteLine("  --salida=RUTA      Archivo de salida");
+    Console.WriteLine("  --desc             Orden descendente");
+    Console.WriteLine("  -h, --help         Mostrar ayuda");
+}
