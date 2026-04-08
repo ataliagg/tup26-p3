@@ -133,8 +133,45 @@ string[] lines = Array.FindAll(tempLines, l => l.Length > 0);
        headers = null;
        dataStart = 0;
     }
+        var rows = new List<Dictionary<string, string>>(); //guardo los datos de  listas en esta variable rows
+    for (int lineIdx =dataStart; lineIdx < lines.Length; lineIdx++) // recorre las lineas del archivo en base al data start y si es q hay encabezado o no
 
-    
+    var values = lines[lineIdx].Split(cfg.Delimiter); // se guardan los datos spliteados en values
+
+    var row = new Dictionary<string, string>(); // se crea una carpeta vacia para guardar los datos de cada fila.
+  
+    if (!cfg.noheader && header is not null)
+    {
+        for (int col = 0; col < header.Length; col++) // bucle q recorre las columnas de las columnas 0 al 3
+        row[header[col]] = col < values.Length ? values[col] : string.Empty; // se guarda en  la var row el valor de cada columna
+    }
+    else
+    {
+        for (int col = 0; col < values.Length; col++)
+        row[col.ToString()] = values[col];
+    }
+    if (cfg.sortFields.Count > 0 && row.Count > 0) //toma en cuenta la cantidad de elementos de sort fields y la cantidad de elementos de row 
+{
+    var firstrow = rows[0]; // guarda el valor de la primera fila de rows en la variable firstrow
+    foreach (var sf in cfg.sortFields) //bucle en donde la variable sf es temporal y toma los datos de cfg sort fields
+    {
+        if (!firstrow.ContainsKey(sf.Name)) // si no existe la condicion de que la primera fila contenga la clave del campo de ordenamiento
+        {
+            string available = "";
+            foreach (var key in firstrow.Keys) //bucle mostrando las columnas de row y se guardan en key temporalmente 
+            {
+                if (available.Length > 0) 
+                available += ", ";
+                available += key; 
+                // se verifica si la var available tiene algun valor, si es que tiene se le agrega una , y despues el nombre de la columna que esta en key
+            }
+         throw newargumentException($"campo de ordenamiento desconocido: '{sf.Name}'. disponible: {available}"); // error si es que la primera fila no tiene clave sf
+        }
+    }
+    return (rows, header); // devuelve las filas y el encabezado
+
+
+
 
 
 
@@ -151,6 +188,6 @@ record AppConfig(
     bool NoHeader,
     bool ShowHelp,
     List<SortField> SortFields
-);
+);}
 
 
