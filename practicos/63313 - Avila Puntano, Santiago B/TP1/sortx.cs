@@ -15,7 +15,7 @@ AppConfig parseargs(string[] args)
 {
     string? inputFile = null; 
     string? outputFile = null; 
-    string deLimiter = ","; 
+    string delimiter = ","; 
     bool noHeader = false; 
     bool showHelp = false;
     List<SortField> sortFields = new List<SortField>(); 
@@ -35,16 +35,16 @@ AppConfig parseargs(string[] args)
         string arg = args[i];
 
         if (arg == "--help" || arg == "-h")
-        
+        {
             showHelp = true;
             continue;
-        
+        }
 
         if (arg == "--no-header" || arg == "-nh")
         {
             noHeader = true;
             continue;
-        
+        }
 
         if (arg == "--by" || arg == "-b")
         {
@@ -53,7 +53,7 @@ AppConfig parseargs(string[] args)
 
             sortFields.Add(ParseSortField(args[++i]));
             continue;
-        
+        }
 
         if (arg == "--input" || arg == "-i")
         {
@@ -73,18 +73,18 @@ AppConfig parseargs(string[] args)
             continue;
         }
 
-        if (arg == "--deLimiter" || arg == "-d")
-        
+        if (arg == "--delimiter" || arg == "-d")
+        {
             if (i + 1 >= args.Length)
                 throw new ArgumentException($"necesita '{arg}' un valor.");
 
             string raw = args[++i];
-            deLimiter = raw == @"\t" ? "\t" : raw;
+            delimiter = raw == @"\t" ? "\t" : raw;
             continue;
         }
 
         if (!arg.StartsWith("-"))
-        
+        {
             if (positional == 0) { inputFile = arg; positional++; }
             else if (positional == 1) { outputFile = arg; positional++; }
             else throw new ArgumentException($"arg posicional inexistente: '{arg}'.");
@@ -99,24 +99,23 @@ AppConfig parseargs(string[] args)
 }
 string readinput(AppConfig cfg)
 {
-    //  se verifica que el archivo cfg no sea null (los datos parseadso)
-    if(cfg.InputFile == null) 
+    //  se verifica que el archivo cfg no sea null (los datos parseados)
+    if(cfg.InputFile != null) 
       return File.ReadAllText(cfg.InputFile); 
-      return Console.In.ReadToEnd(); 
-} 
-// lista de fila y encabezado en base al texto de archivo cfg
-(List<Dictionary<string,string>> rows,string[]? Header) parsedelimited (string text, AppConfigconfig cfg)
-{
-    // el templines va a tener todsas las lineas incluyendo las vacias tambien, despues con el split separa en lineas y por ultimo se eliminan las lineas vacias.
-  var tempLines = text
-    .Replace("\r\n", "\n")
-    .Replace("\r", "\n")
-    .Split('\n');
-string[] lines = Array.FindAll(tempLines, l => l.Length > 0);
+    return Console.In.ReadToEnd(); 
 }
+// lista de fila y encabezado en base al texto de archivo cfg
+(List<Dictionary<string,string>> rows, string[]? Header) parsedelimited(string text, AppConfig cfg)
+{
+    // el templines va a tener todas las lineas incluyendo las vacias tambien, despues con el split separa en lineas y por ultimo se eliminan las lineas vacias.
+    var tempLines = text
+        .Replace("\r\n", "\n")
+        .Replace("\r", "\n")
+        .Split('\n');
+    string[] lines = Array.FindAll(tempLines, l => l.Length > 0);
 
-    if (lines.length == 0)
-     return (new List<Dictionary<string, string>>(), null);
+    if (lines.Length == 0)
+        return (new List<Dictionary<string, string>>(), null);
 
 
 
@@ -128,28 +127,34 @@ string[] lines = Array.FindAll(tempLines, l => l.Length > 0);
         header = lines[0].Split(cfg.Delimiter);
         dataStart = 1;
     }
-    else
-    {
-       headers = null;
-       dataStart = 0;
-    }
-        var rows = new List<Dictionary<string, string>>(); //guardo los datos de  listas en esta variable rows
-    for (int lineIdx =dataStart; lineIdx < lines.Length; lineIdx++) // recorre las lineas del archivo en base al data start y si es q hay encabezado o no
-
+else
+{
+    header = null;
+    dataStart = 0;
+}
+var rows = new List<Dictionary<string, string>>(); //guardo los datos de listas en esta variable rows
+for (int lineIdx = dataStart; lineIdx < lines.Length; lineIdx++) // recorre las lineas del archivo en base al data start y si es q hay encabezado o no
+{
     var values = lines[lineIdx].Split(cfg.Delimiter); // se guardan los datos spliteados en values
 
     var row = new Dictionary<string, string>(); // se crea una carpeta vacia para guardar los datos de cada fila.
-  
-    if (!cfg.noheader && header is not null)
+
+    if (!cfg.NoHeader && header is not null)
     {
         for (int col = 0; col < header.Length; col++) // bucle q recorre las columnas de las columnas 0 al 3
-        row[header[col]] = col < values.Length ? values[col] : string.Empty; // se guarda en  la var row el valor de cada columna
+        {
+            row[header[col]] = col < values.Length ? values[col] : string.Empty; // se guarda en  la var row el valor de cada columna
+        }
     }
     else
     {
         for (int col = 0; col < values.Length; col++)
-        row[col.ToString()] = values[col];
+        {
+            row[col.ToString()] = values[col];
+        }
     }
+    rows.Add(row);
+}
     if (cfg.sortFields.Count > 0 && row.Count > 0) //toma en cuenta la cantidad de elementos de sort fields y la cantidad de elementos de row 
 {
     var firstrow = rows[0]; // guarda el valor de la primera fila de rows en la variable firstrow
@@ -165,11 +170,20 @@ string[] lines = Array.FindAll(tempLines, l => l.Length > 0);
                 available += key; 
                 // se verifica si la var available tiene algun valor, si es que tiene se le agrega una , y despues el nombre de la columna que esta en key
             }
-         throw newargumentException($"campo de ordenamiento desconocido: '{sf.Name}'. disponible: {available}"); // error si es que la primera fila no tiene clave sf
+         throw new ArgumentException($"campo de ordenamiento desconocido: '{sf.Name}'. disponible: {available}"); // error si es que la primera fila no tiene clave sf
         }
     }
     return (rows, header); // devuelve las filas y el encabezado
 
+    List<Dictionary<string, string>> sortrows( //lista con clave string y valor string que representa los nombres de la fila y datos de estas,sortrows funcion q ordena las filas en base a rows
+     List<Dictionary<string, string>> rows, //lista de filas a ordenar
+     List<SortField> sortFields);
+    {
+        if (sortFields.Count == 0 || rows.Count == 0) 
+        return rows; // si no hay criterio de ordenamiento o filas devuelve las filas sin ordenar ;
+    }
+
+}
 
 
 
@@ -188,6 +202,6 @@ record AppConfig(
     bool NoHeader,
     bool ShowHelp,
     List<SortField> SortFields
-);}
+);
 
 
