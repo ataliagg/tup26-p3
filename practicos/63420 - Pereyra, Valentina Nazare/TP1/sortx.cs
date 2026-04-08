@@ -47,3 +47,33 @@ class Program
         throw new NotImplementedException();
     }
 }
+
+static Configuracion ObtenerConfiguracion(string[] args)
+{
+    string? entrada = null;
+    string? salida = null;
+    bool descendente = false;
+
+    foreach (var arg in args)
+    {
+        if (arg.StartsWith("--entrada="))
+            entrada = arg.Replace("--entrada=", "");
+
+        else if (arg.StartsWith("--salida="))
+            salida = arg.Replace("--salida=", "");
+
+        else if (arg == "--desc")
+            descendente = true;
+
+        else if (arg == "--help" || arg == "-h")
+        {
+            MostrarAyuda();
+            Environment.Exit(0);
+        }
+    }
+
+    if (entrada == null || salida == null)
+        throw new ArgumentException("Debe indicar --entrada y --salida");
+
+    return new Configuracion(entrada, salida, descendente, new List<CampoOrden>());
+}
