@@ -185,3 +185,15 @@ string Serialize(string[]? header, List<Dictionary<string, string>> rows, AppCon
 
     return sw.ToString();
 }
+void WriteOutput(string outputText, AppConfig config)
+{
+    if (!string.IsNullOrEmpty(config.OutputFile))
+    {
+        File.WriteAllText(config.OutputFile, outputText);
+    }
+    else
+    {
+        // Si no hay archivo de salida, se imprime por consola
+        Console.Write(outputText);
+    }
+}
