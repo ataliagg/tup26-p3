@@ -98,3 +98,20 @@ static List<string> OrdenarLineas(List<string> lineas, Configuracion config)
 
     return lineas.OrderBy(x => x).ToList();
 }
+
+static void Main(string[] args)
+{
+    try
+    {
+        var config = ObtenerConfiguracion(args);
+        var lineas = LeerArchivo(config.Entrada);
+        var ordenadas = OrdenarLineas(lineas, config);
+        GuardarArchivo(config.Salida, ordenadas);
+
+        Console.WriteLine("Archivo procesado correctamente.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+    }
+}
