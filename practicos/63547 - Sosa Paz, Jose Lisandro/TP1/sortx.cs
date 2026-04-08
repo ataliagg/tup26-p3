@@ -1,7 +1,14 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
-// sortx [input [output]] [-b|--by campo[:tipo[:orden]]]...
-//       [-i|--input input] [-o|--output output]
-//       [-d|--delimiter delimitador]
-//       [-nh|--no-header] [-h|--help]
+// --- Acá irá el código principal más adelante ---
 
-Console.WriteLine($"sortx {string.Join(" ", args)}");
+// Molde tradicional usando una Clase
+public class Empleado
+{
+    public string Nombre { get; set; }
+    public string Apellido { get; set; }
+    public decimal Sueldo { get; set; }
+}
