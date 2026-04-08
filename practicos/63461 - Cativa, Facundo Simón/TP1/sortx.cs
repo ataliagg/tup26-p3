@@ -107,9 +107,35 @@ class Program
 }
 
     static List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows, AppConfig config)
-    {
+{
+    if (config.SortFields.Count == 0)
         return rows;
-    }
+
+    var field = config.SortFields[0]; // primer campo de la lista
+
+    rows.Sort((a, b) =>
+    {
+        var valA = a.ContainsKey(field.Name) ? a[field.Name] : "";
+        var valB = b.ContainsKey(field.Name) ? b[field.Name] : "";
+
+        int result;
+
+        if (field.Numeric)
+        {
+            double numA = double.TryParse(valA, out var na) ? na : 0;
+            double numB = double.TryParse(valB, out var nb) ? nb : 0;
+            result = numA.CompareTo(numB);
+        }
+        else
+        {
+            result = string.Compare(valA, valB, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return field.Descending ? -result : result;
+    });
+
+    return rows;
+}
 
     static string Serialize(List<Dictionary<string, string>> rows, AppConfig config)
     {
