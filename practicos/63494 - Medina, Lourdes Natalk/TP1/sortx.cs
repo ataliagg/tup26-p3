@@ -70,7 +70,7 @@ AppConfig ParseArgs(string[] args)
         }
     }
 
-    if (!sortFields.Any())
+    if (SortFields.Any())
         throw new Exception("Debe especificar al menos un criterio de orden (-b)");
 
     return new AppConfig(input, output, delimiter, noHeader, sortFields);
