@@ -253,3 +253,56 @@ string ReadInput(AppConfig config)
 
     return (headers, filas);
 }
+
+// 4. SortRows
+
+List<Dictionary<string, string>> SortRows(
+    List<Dictionary<string, string>> rows,
+    List<string> headers,
+    AppConfig config)
+{
+    for (int i = 0; i < config.SortFields.Count; i++)
+    {
+        if (!headers.Contains(config.SortFields[i].Name))
+            throw new Exception("La columna no existe: " + config.SortFields[i].Name);
+    }
+
+    List<Dictionary<string, string>> resultado = new List<Dictionary<string, string>>(rows);
+
+    resultado.Sort((a, b) =>
+    {
+        for (int i = 0; i < config.SortFields.Count; i++)
+        {
+            SortField regla = config.SortFields[i];
+            int comparacion = 0;
+
+            if (regla.Numeric)
+            {
+                decimal valorA;
+                decimal valorB;
+
+                if (!decimal.TryParse(a[regla.Name], out valorA))
+                    throw new Exception("El valor '" + a[regla.Name] + "' no es numérico.");
+
+                if (!decimal.TryParse(b[regla.Name], out valorB))
+                    throw new Exception("El valor '" + b[regla.Name] + "' no es numérico.");
+
+                comparacion = valorA.CompareTo(valorB);
+            }
+            else
+            {
+                comparacion = string.Compare(a[regla.Name], b[regla.Name], true);
+            }
+
+            if (regla.Descending)
+                comparacion = comparacion * -1;
+
+            if (comparacion != 0)
+                return comparacion;
+        }
+
+        return 0;
+    });
+
+    return resultado;
+}
