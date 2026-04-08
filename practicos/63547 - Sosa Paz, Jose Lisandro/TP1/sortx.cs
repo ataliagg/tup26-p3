@@ -3,12 +3,37 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-// --- Acá irá el código principal más adelante ---
+string rutaArchivo = "empleados.csv"; 
+List<Empleado> nomina = new List<Empleado>();
 
-// Molde tradicional usando una Clase
+foreach (string fila in File.ReadLines(rutaArchivo))
+{
+    string[] datos = fila.Split(',');
+    
+    if (datos.Length >= 3)
+    {
+        Empleado emp = new Empleado();
+        emp.Nombre = datos[0].Trim();
+        emp.Apellido = datos[1].Trim();
+        emp.Sueldo = Convert.ToDecimal(datos[2].Trim());
+        
+        nomina.Add(emp);
+    }
+}
+
+string parametro = args.Length > 0 ? args[0] : "--apellido";
+
+IEnumerable<Empleado> nominaOrdenada = parametro switch
+{
+    "--sueldo" => nomina.OrderByDescending(x => x.Sueldo),
+    "--nombre" => nomina.OrderBy(x => x.Nombre),
+    _ => nomina.OrderBy(x => x.Apellido)
+};
 public class Empleado
 {
     public string Nombre { get; set; }
     public string Apellido { get; set; }
     public decimal Sueldo { get; set; }
 }
+
+
