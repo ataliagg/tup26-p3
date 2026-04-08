@@ -141,7 +141,7 @@ List<Dictionary<string, string>> SortRows(List<Dictionary<string, string>> rows,
     {
         Func<Dictionary<string, string>, object> keySelector = row =>
         {
-            if (!row.ContainsKey(field.Name))
+            if (row.ContainsKey(field.Name))
                 throw new Exception($"Campo inválido: {field.Name}");
 
             var value = row[field.Name];
