@@ -15,3 +15,7 @@ try
 {
     AppConfig config = ParseArgs(Environment.GetCommandLineArgs().Skip(1).ToArray());
     string text = ReadInput(config);
+(List<string> header, List<Dictionary<string,string>> rows) = ParseDelimited(text, config);
+    List<Dictionary<string, string>> sortedRows = SortRows(rows, config.SortFields);
+    string outputText = WriteOutput(header, sortedRows, config);
+    WriteOutputFile(outputText, config);
