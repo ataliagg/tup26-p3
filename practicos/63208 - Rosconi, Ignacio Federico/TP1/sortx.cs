@@ -109,3 +109,16 @@ static AppConfig ParseArgs(string[] args)
 
     return new AppConfig(input, output, descending, sortFields);
 }
+
+static List<string> ReadInput(string inputPath)
+{
+    if (!File.Exists(inputPath))
+        throw new FileNotFoundException("Archivo de entrada no encontrado.");
+
+    return File.ReadAllLines(inputPath).ToList();
+}
+
+static void WriteOutput(string outputPath, List<string> lines)
+{
+    File.WriteAllLines(outputPath, lines);
+}
