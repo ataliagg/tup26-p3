@@ -119,6 +119,51 @@ List<Dictionary<string, string>> ProcesarTexto(string texto, Configuracion confi
 
     return listaResultante;
 }
+List<Dictionary<string, string>> OrdenarFilas(List<Dictionary<string, string>> filas, Configuracion config)
+{
+    if (config.Criterios.Count == 0 || filas.Count < 2) return filas;
+
+    Dictionary<string, string>? encabezadoGuardado = null;
+    var datosAOrdenar = new List<Dictionary<string, string>>();
+
+    if (!config.SinEncabezado)
+    {
+        encabezadoGuardado = filas[0];
+        for (int i = 1; i < filas.Count; i++) datosAOrdenar.Add(filas[i]);
+    }
+    else
+    {
+        foreach (var f in filas) datosAOrdenar.Add(f);
+    }
+    datosAOrdenar.Sort((a, b) =>
+    {
+        foreach (var criterio in config.Criterios)
+        {
+            if (!a.ContainsKey(criterio.Campo)) throw new Exception($"Campo '{criterio.Campo}' no encontrado.");
+
+            int comparacion = 0;
+            if (criterio.EsNumerico)
+            {
+                double numA = double.Parse(a[criterio.Campo]);
+                double numB = double.Parse(b[criterio.Campo]);
+                comparacion = numA.CompareTo(numB);
+            }
+            else
+            {
+                comparacion = string.Compare(a[criterio.Campo], b[criterio.Campo]);
+            }
+
+            if (comparacion != 0)
+            {
+                return criterio.EsDescendente ? -comparacion : comparacion;
+            }
+        }
+        return 0;
+    });
+    if (encabezadoGuardado != null) datosAOrdenar.Insert(0, encabezadoGuardado);
+    return datosAOrdenar;
+}
+
 
 
 
