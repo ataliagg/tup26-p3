@@ -16,7 +16,7 @@ LegajX  Nombre y Apellido                Teléfono         Foto  GitHub         
 61577   Gonzalez, Lucas Alfredo E        (381) 669-4386   Si    Lucasgonzaa              🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63457   Gonzalez Dupuy, Ignacio          (381) 683-1233   Si    ignas11                  🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63174   Jerez, Luciano German            (381) 550-7143   Si    luchex1525               🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63700   Jimenez, Nelson Maximilian       (381) 639‑2861   No    maximilianojimnez        🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63700   Jimenez, Nelson Maximiliano      (381) 639‑2861   No    maximilianojimnez        🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63399   Lazarte, Gonzalo Romeo           (381) 576-0069   No    Tutu-04                  🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63211   Montero, Luca                    (381) 528-7848   No    monteroluca007           🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63350   Paez Carabajal, Santiago         (381) 572-4096   Si    SantiagoPaez-2           🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
