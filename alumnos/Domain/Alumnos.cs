@@ -1,47 +1,39 @@
 namespace Tup26.AlumnosApp;
 
 class Alumnos : IEnumerable<Alumno> {
+
+    public Alumno? BuscarPorLegajo(int legajo) =>
+        Lista.FirstOrDefault(a => a.Legajo == legajo);
+        
     public List<Alumno> Lista { get; set; } = new();
 
+    public Alumno this[int index] => Lista[index];
     public int Count => Lista.Count;
 
-    public Alumno this[int index] => Lista[index];
-
-    public Alumnos(IEnumerable<Alumno> alumnos) {
+    public Alumnos(IEnumerable<Alumno> alumnos) =>
         Lista = alumnos?.ToList() ?? new();
-    }
 
-    public void Agregar(Alumno alumno) {
+    public void Agregar(Alumno alumno) =>
         Lista.Add(alumno);
-    }
 
     public Alumnos ConGithub(bool tiene = true) =>
-        new(Lista.Where(alumno => tiene == alumno.ConGithub));
+        new(Lista.Where(a => tiene == a.ConGithub));
 
     public Alumnos ConPractico(int numero, Estado estado) =>
-        new(Lista.Where(alumno =>
-            alumno.practicos != null &&
-            alumno.practicos.Count >= numero &&
-            alumno.practicos[numero - 1].HasFlag(estado)));
+        new(Lista.Where(a =>  (a.practicos[numero - 1] & estado) != 0));
 
     public Alumnos ConTelefono(bool tiene = true) =>
-        new(Lista.Where(alumno => tiene == alumno.ConTelefono));
+        new(Lista.Where(a => tiene == a.ConTelefono));
 
     public Alumnos ConFotos(bool tiene = true) =>
-        new(Lista.Where(alumno => tiene == alumno.ConFoto));
+        new(Lista.Where(a => tiene == a.ConFoto));
 
     public Alumnos EnComision(string comision) =>
-        new(Lista.Where(alumno =>
-            string.Equals(alumno.Comision, comision, StringComparison.OrdinalIgnoreCase)));
+        new(Lista.Where(a => string.Equals(a.Comision, comision)));
 
     public Alumnos ParaAgregar() =>
-        new(Lista.Where(alumno => alumno.GitHub == "(agregar)"));
+        new(Lista.Where(a => a.GitHub == "(agregar)"));
 
-    public IEnumerator<Alumno> GetEnumerator() {
-        return Lista.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
-    }
+    public IEnumerator<Alumno> GetEnumerator() => Lista.GetEnumerator(); 
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator(); 
 }

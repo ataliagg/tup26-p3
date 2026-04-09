@@ -34,48 +34,51 @@ Servicio para interactuar con WhatsApp mediante `wacli`.
 class WAppService {
     readonly string? store;
     readonly TimeSpan timeout;
-    bool sincronizacionHabilitada = true;
-    List<GrupoWhatsApp> grupos = new();
 
-    public WAppService(string? store = null, TimeSpan? timeout = null, bool refrescarGrupos = true) {
-        this.store = store;
+    public WAppService(string? store = null, TimeSpan? timeout = null) {
+        this.store   = store;
         this.timeout = timeout ?? TimeSpan.FromMinutes(5);
 
-        Sincronizar(refrescarGrupos);
+        Sincronizar();
+    }
+
+    static void ValidarNoVacio(string valor, string parametro) {
+        if (string.IsNullOrWhiteSpace(valor)) {
+            throw new ArgumentException($"El valor de '{parametro}' no puede estar vacío.", parametro);
+        }
+    }
+
+    static void ValidarNoVacio(string[] valores, string parametros) {
+        if (valores == null || valores.Length == 0 || valores.All(string.IsNullOrWhiteSpace)) {
+            throw new ArgumentException($"El valor de '{parametros}' no puede estar vacío.", parametros);
+        }
+    }
+
+    static void ValidarTrue(bool condicion, string mensaje) {
+        if (!condicion) {
+            throw new ArgumentException(mensaje);
+        }
     }
 
     public void Enviar(string destinatario, string mensaje) {
-        if (string.IsNullOrWhiteSpace(destinatario)) {
-            throw new ArgumentException("El destinatario no puede estar vacío.", nameof(destinatario));
-        }
-
-        if (string.IsNullOrWhiteSpace(mensaje)) {
-            throw new ArgumentException("El mensaje no puede estar vacío.", nameof(mensaje));
-        }
+        ValidarNoVacio(destinatario, nameof(destinatario));
+        ValidarNoVacio(mensaje, nameof(mensaje));
 
         string destino = ResolverDestinoMensaje(destinatario);
-        List<string> argumentos = new() { "send", "text", "--to", destino, "--message", mensaje };
+        List<string> argumentos = ["send", "text", "--to", destino, "--message", mensaje];
         Ejecutar(argumentos);
     }
 
 
     public void Invitar(string grupo, params string[] contactos) {
-
-        if (string.IsNullOrWhiteSpace(grupo)) {
-            throw new ArgumentException("El grupo no puede estar vacío.", nameof(grupo));
-        }
-
-        if (contactos is null || contactos.Length == 0) {
-            throw new ArgumentException("Debes indicar al menos un participante.", nameof(contactos));
-        }
+        ValidarNoVacio(grupo, nameof(grupo));
+        ValidarNoVacio(contactos, nameof(contactos));
 
         string grupoJid = ResolverJidGrupo(grupo);
-        List<string> argumentos = new() { "groups", "participants", "add", "--jid", grupoJid };
+        List<string> argumentos = ["groups", "participants", "add", "--jid", grupoJid ];
 
         foreach (string usuario in contactos) {
-            if (string.IsNullOrWhiteSpace(usuario)) {
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(usuario)) { continue; }
 
             argumentos.Add("--user");
             argumentos.Add(usuario);
@@ -88,24 +91,17 @@ class WAppService {
         Ejecutar(argumentos);
     }
 
-    void Sincronizar(bool refrescarRemoto=true) {
-        if (refrescarRemoto && sincronizacionHabilitada) {
-            try {
-                Ejecutar(new() { "groups", "refresh" });
-            }
-            catch (InvalidOperationException ex) when (EsErrorAutenticacionWacli(ex)) {
-                sincronizacionHabilitada = false;
-                Console.WriteLine("Aviso: wacli no está autenticado; se usa la base local para grupos y contactos.");
-            }
+    void Sincronizar() {
+        try {
+            Ejecutar([ "groups", "refresh" ]);
         }
-
-        grupos = ListarGruposDesdeBaseLocal();
+        catch (InvalidOperationException ex) when (EsErrorAutenticacionWacli(ex)) {
+            Console.WriteLine("Aviso: wacli no está autenticado; se usa la base local para grupos y contactos.");
+        }
     }
 
     public List<ContactoWhatsApp> Participantes(string grupo) {
-        if (string.IsNullOrWhiteSpace(grupo)) {
-            throw new ArgumentException("El grupo no puede estar vacío.", nameof(grupo));
-        }
+        ValidarNoVacio(grupo, nameof(grupo));
 
         string? grupoJid = BuscarJidGrupoEnBaseLocal(grupo);
         if (string.IsNullOrWhiteSpace(grupoJid)) {
@@ -116,30 +112,19 @@ class WAppService {
     }
 
     public List<GrupoWhatsApp> Grupos() {
-        if (grupos.Count == 0) {
-            grupos = ListarGruposDesdeBaseLocal();
-        }
-
-        return new(grupos);
+        return ListarGruposDesdeBaseLocal();
     }
 
     public List<MensajeWhatsApp> Mensajes(string referencia, DateTime? desde = null, DateTime? hasta = null) {
-        if (string.IsNullOrWhiteSpace(referencia)) {
-            throw new ArgumentException("La referencia no puede estar vacía.", nameof(referencia));
-        }
-
-        if (desde.HasValue && hasta.HasValue && desde.Value > hasta.Value) {
-            throw new ArgumentException("La fecha inicial no puede ser mayor que la fecha final.", nameof(desde));
-        }
+        ValidarNoVacio(referencia, nameof(referencia));
+        ValidarTrue(!desde.HasValue || !hasta.HasValue || desde.Value <= hasta.Value, "La fecha inicial no puede ser mayor que la fecha final.");
 
         string chatJid = ResolverDestinoMensaje(referencia);
         return ListarMensajesDesdeBaseLocal(chatJid, desde, hasta);
     }
 
     string ResolverJidGrupo(string grupo) {
-        if (string.IsNullOrWhiteSpace(grupo)) {
-            throw new ArgumentException("El grupo no puede estar vacío.", nameof(grupo));
-        }
+        ValidarNoVacio(grupo, nameof(grupo));
 
         string referencia = grupo.Trim();
 
@@ -156,9 +141,7 @@ class WAppService {
     }
 
     string ResolverDestinoMensaje(string destinatario) {
-        if (string.IsNullOrWhiteSpace(destinatario)) {
-            throw new ArgumentException("El destinatario no puede estar vacío.", nameof(destinatario));
-        }
+        ValidarNoVacio(destinatario, nameof(destinatario));
 
         string referencia = destinatario.Trim();
 

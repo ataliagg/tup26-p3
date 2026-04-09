@@ -23,7 +23,7 @@ LegajX  Nombre y Apellido                Teléfono         Foto  GitHub         
 61581   Paz, Naim Federico               (381) 353-0060   Si    naimp074                 🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63647   Paz, Valentina                   (381) 599-6422   Si    valepaz11                🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63420   Pereyra, Valentina Nazaret       (381) 552-8065   Si    ValentinaPereyra03       🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63354   Perondi, Luciano                 (381) 350-0777   Si    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63354   Perondi, Luciano                 (381) 350-0777   Si    lucho-bot                🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63393   Ritorto, Lucca                   (381) 627-2271   No    LuccaRDP                 🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63208   Rosconi, Ignacio Federico        (381) 533-1344   Si    IgnacioRosconi           🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63387   Sosa Gonella, Luca               (381) 355-5126   Si    lucasosag1               🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
@@ -44,8 +44,9 @@ LegajX  Nombre y Apellido                Teléfono         Foto  GitHub         
 63300   Alvarez, Hernan Fabricio         (381) 581-4086   Si    hernancarpalvarez28      🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63313   Avila Puntano, Benjamin          (381) 329-6643   Si    santiagobnj-avila-pun    🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63222   Bajre Martinez, Julian           (381) 351-9652   Si    julianbajre-png          🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-61801   Benega, Maximiliano Abraham      (381) 505-9048   Si    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63150   Carlino, Joaquin                 (381) 605-7383   Si    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+61801   Benega, Maximiliano Abraham      (381) 505-9048   Si    AbrahamBenega            🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63493   Busnelli, Bruno                  (381) 366-0607   No    brunobusnelli            🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪    ️
+63150   Carlino, Joaquin                 (381) 605-7383   Si    Vincent-coffe            🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63341   Carrer, Juan Cruz                (381) 632-5727   Si    juancarrer11             🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63461   Cativa, Facundo Simón            (381) 391-4222   Si    cativafacundo9-gif       🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63218   Cortes, Guillermo Augusto        (381) 606-0586   Si    GuilleCortes01           🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
@@ -69,10 +70,10 @@ LegajX  Nombre y Apellido                Teléfono         Foto  GitHub         
 63388   López, Leandro Joel              (381) 360-4566   Si    Leandro-progam           🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63213   Marina Noguera, Morena Giovanna  (381) 354-0133   Si    mmore-cloud              🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63494   Medina, Lourdes Natalia          (381) 201-7153   Si    lumedina23               🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63418   Miranda, Gonzalo Emanuel         —                No    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63418   Miranda, Gonzalo Emanuel         —                No    gonzalomiranda456        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63234   Molina, Lazaro Exequiel          (381) 416-0720   Si    Lazaro2005-Ml            🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63412   Morán, Facundo Martín            (381) 301-0206   Si    facumoran                🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63205   Navarro Aragón, Facundo          (381) 466-6665   Si    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63205   Navarro Aragón, Facundo          (381) 466-6665   Si    facundonavarroaragon     🟠⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63220   Pérez del Rien, Valentina        (381) 360-2873   Si    Vall19-git               🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63232   Roldan, Enzo Joaquin             (381) 565-4292   No    Roldanebzo               🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63216   Sanchez, Sofía Micaela           (381) 342-9672   Si    SofiSanchez126           🟢⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️

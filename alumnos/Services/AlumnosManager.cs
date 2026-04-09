@@ -1,7 +1,7 @@
 namespace Tup26.AlumnosApp;
 
 static class AlumnosManager {
-    public static Alumnos CargarAlumnos(string rutaArchivo) {
+    public static Alumnos Cargar(string rutaArchivo) {
         Alumnos alumnos = new(Array.Empty<Alumno>());
         string comisionActual = string.Empty;
 
@@ -104,7 +104,7 @@ static class AlumnosManager {
                 alumno.Legajo.ToString(),
                 ObtenerNombreApellido(alumno),
                 FormatearTexto(alumno.Telefono),
-                alumno.TieneFoto ? "Si" : "No",
+                alumno.ConFoto ? "Si" : "No",
                 FormatearGitHub(alumno.GitHub),
                 ObtenerComision(alumno),
                 FormatearEstados(alumno.practicos),
@@ -303,17 +303,22 @@ static class AlumnosManager {
 
             for (int i = 0; i < alumnos.Count; i++) {
                 Alumno alumno = alumnos[i];
-                sb.AppendLine("  {");
-                sb.AppendLine($"    \"legajo\": {alumno.Legajo},");
-                sb.AppendLine($"    \"comision\": \"{EscaparJson(alumno.Comision)}\",");
-                sb.AppendLine($"    \"nombre\": \"{EscaparJson(alumno.Nombre)}\",");
-                sb.AppendLine($"    \"apellido\": \"{EscaparJson(alumno.Apellido)}\",");
-                sb.AppendLine($"    \"telefono\": \"{EscaparJson(alumno.Telefono)}\",");
-                sb.AppendLine($"    \"tieneFoto\": {alumno.TieneFoto.ToString().ToLowerInvariant()},");
-                sb.AppendLine($"    \"gitHub\": \"{EscaparJson(alumno.GitHub)}\",");
-                sb.AppendLine($"    \"practicos\": [ {string.Join(", ", alumno.practicos.Select(p => string.Concat(((char)34).ToString(), p.ToEmoji(), ((char)34).ToString())))} ],");
-                sb.AppendLine($"    \"examenes\": [ {string.Join(", ", alumno.examenes.Select(e => string.Concat(((char)34).ToString(), e.ToEmoji(), ((char)34).ToString())))} ]");
-                sb.Append("  }");
+                string practicos = string.Join(", ", alumno.practicos.Select(p => $"\"{p.ToEmoji()}\""));
+                string examenes  = string.Join(", ", alumno.examenes.Select(e => $"\"{e.ToEmoji()}\""));
+
+                sb.AppendLine($$"""
+                    {
+                        "legajo":   {{alumno.Legajo}},
+                        "comision": "{{alumno.Comision}}",
+                        "nombre":   "{{alumno.Nombre}}",
+                        "apellido": "{{alumno.Apellido}}",
+                        "telefono": "{{alumno.Telefono}}",
+                        "tieneFoto": {{alumno.ConFoto.ToString().ToLower()}},
+                        "gitHub": "  {{alumno.GitHub}}",
+                        "practicos": [ {{practicos}} ],
+                        "examenes":  [ {{examenes}} ]
+                    }
+                    """);
 
                 if (i < alumnos.Count - 1) {
                     sb.Append(',');
@@ -428,26 +433,20 @@ static class AlumnosManager {
     static string AjustarColumna(string texto, int ancho = 20) {
         string valor = FormatearTexto(texto);
 
-        if (valor.Length > ancho) {
-            return valor.Substring(0, ancho);
-        }
+        if (valor.Length > ancho) { return valor.Substring(0, ancho); }
 
         return valor.PadRight(ancho);
     }
 
     static string FormatearTexto(string texto) {
-        if (string.IsNullOrWhiteSpace(texto)) {
-            return "—";
-        }
+        if (string.IsNullOrWhiteSpace(texto)) { return "—"; }
 
         return texto.Trim();
     }
 
     static string LimpiarCampo(string texto) {
         string valor = texto.Trim();
-        if (valor == "—") {
-            return string.Empty;
-        }
+        if (valor == "—") { return string.Empty; }
 
         return valor;
     }
@@ -464,8 +463,7 @@ static class AlumnosManager {
         if (partes.Length == 2) {
             apellido = LimpiarCampo(partes[0]);
             nombre = LimpiarCampo(partes[1]);
-        }
-        else {
+        } else {
             apellido = LimpiarCampo(nombreCompleto);
             nombre = string.Empty;
         }
