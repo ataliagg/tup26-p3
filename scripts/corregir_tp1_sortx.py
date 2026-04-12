@@ -17,6 +17,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CSV = REPO_ROOT / "alumnos" / "tp1.csv"
 DEFAULT_PRACTICOS = REPO_ROOT / "practicos"
+RESULTS_CSV = REPO_ROOT / "resultados-p1.csv"
 MIN_PRESENTED_LINES = 20
 
 EMPLEADOS_CSV = """nombre,apellido,edad,salario,departamento
@@ -68,6 +69,7 @@ class TestCase:
     expected_output_file: str | None = None
     require_stdout_nonempty: bool = False
     require_stderr_nonempty: bool = False
+    optional: bool = False
 
 
 @dataclass(frozen=True)
@@ -85,6 +87,7 @@ def build_test_cases() -> list[TestCase]:
             expected_exit=0,
             input_file_name=None,
             require_stdout_nonempty=True,
+            optional=True,
         ),
         TestCase(
             name="apellido",
@@ -213,6 +216,22 @@ def short_output(text: str, limit: int = 12) -> str:
     return f"{head} | ..."
 
 
+def format_failed_tests(failed_tests: list[tuple[int, str]]) -> str:
+    return "falla " + " ".join(f"{index}({name})" for index, name in failed_tests)
+
+
+def render_progress(current: int, total: int, label: str = "", width: int = 24) -> None:
+    if total <= 0:
+        return
+
+    current = max(0, min(current, total))
+    filled = int(width * current / total)
+    bar = "█" * filled + "░" * (width - filled)
+    suffix = f" {label}" if label else ""
+    sys.stderr.write(f"\r[{bar}] {current}/{total}{suffix}")
+    sys.stderr.flush()
+
+
 def run_command( cmd: list[str], *, cwd: Path, timeout: int, stdin_text: str | None = None, ) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
     env.setdefault("DOTNET_CLI_TELEMETRY_OPTOUT", "1")
@@ -331,13 +350,27 @@ def evaluate_submission( legajo: int, practicos_dir: Path, temp_root: Path, buil
     if not compiled or dll_path is None:
         return Evaluation(legajo, "no-compila", build_details)
 
+    warnings: list[str] = []
+    failed_tests: list[tuple[int, str]] = []
+    failed_details: list[str] = []
+
     for index, case in enumerate(test_cases, start=1):
         case_dir = temp_root / f"case-{legajo}-{index:02d}-{slugify(case.name)}"
         ok, details = evaluate_case(dll_path, case, case_dir, run_timeout)
         if not ok:
-            return Evaluation(legajo, "falla", details)
+            if case.optional:
+                warnings.append(details)
+                continue
+            failed_tests.append((index, case.name))
+            if details:
+                failed_details.append(f"{index}: {details}")
+            continue
 
-    return Evaluation(legajo, "funciona")
+    if failed_tests:
+        resultado = format_failed_tests(failed_tests)
+        return Evaluation(legajo, resultado, " | ".join(failed_details))
+
+    return Evaluation(legajo, "funciona", " | ".join(warnings))
 
 
 def slugify(value: str) -> str:
@@ -347,17 +380,25 @@ def slugify(value: str) -> str:
 
 
 def emit_results(results: list[Evaluation], verbose: bool) -> None:
+    write_results_csv(results, RESULTS_CSV)
+
+    if RESULTS_CSV.is_file():
+        print(f"Resultados guardados en: {RESULTS_CSV}", file=sys.stderr)
+
     writer = csv.writer(sys.stdout, lineterminator="\n")
-    headers = ["legajo", "resultado"]
-    if verbose:
-        headers.append("detalle")
-    writer.writerow(headers)
+    writer.writerow(["legajo", "resultado"])
 
     for item in results:
-        row = [item.legajo, item.resultado]
-        if verbose:
-            row.append(item.detalle)
-        writer.writerow(row)
+        writer.writerow([item.legajo, item.resultado])
+
+
+def write_results_csv(results: list[Evaluation], output_path: Path) -> None:
+    with output_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow(["legajo", "resultado"])
+
+        for item in results:
+            writer.writerow([item.legajo, item.resultado])
 
 
 def main() -> int:
@@ -375,10 +416,26 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="tp1-sortx-") as tmp:
         temp_root = Path(tmp)
-        results = [
-            evaluate_submission( legajo=legajo, practicos_dir=args.practicos, temp_root=temp_root, build_timeout=args.build_timeout, run_timeout=args.run_timeout, test_cases=test_cases, )
-            for legajo in legajos
-        ]
+        results: list[Evaluation] = []
+        total = len(legajos)
+        render_progress(0, total, "iniciando")
+
+        for index, legajo in enumerate(legajos, start=1):
+            render_progress(index - 1, total, f"legajo {legajo}")
+            results.append(
+                evaluate_submission(
+                    legajo=legajo,
+                    practicos_dir=args.practicos,
+                    temp_root=temp_root,
+                    build_timeout=args.build_timeout,
+                    run_timeout=args.run_timeout,
+                    test_cases=test_cases,
+                )
+            )
+            render_progress(index, total, f"legajo {legajo}")
+
+        if total > 0:
+            sys.stderr.write("\n")
 
     emit_results(results, args.verbose)
     return 0

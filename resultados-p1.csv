@@ -1,0 +1,71 @@
+legajo,resultado
+61026,funciona
+61057,no-presentado
+61161,no-compila
+61489,funciona
+61490,funciona
+61577,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin)
+61581,funciona
+61641,no-presentado
+61801,no-presentado
+61907,no-presentado
+62844,funciona
+63137,funciona
+63150,funciona
+63174,funciona
+63182,funciona
+63205,no-presentado
+63207,funciona
+63208,no-compila
+63211,no-presentado
+63213,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin) 7(columna-inexistente)
+63216,funciona
+63217,no-presentado
+63218,falla 5(salida-archivo)
+63219,falla 4(departamento-salario) 5(salida-archivo)
+63220,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin)
+63222,no-compila
+63231,no-compila
+63232,no-presentado
+63234,no-compila
+63241,funciona
+63266,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin)
+63268,no-compila
+63297,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 5(salida-archivo) 7(columna-inexistente)
+63300,funciona
+63313,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin)
+63330,no-presentado
+63341,funciona
+63345,falla 7(columna-inexistente)
+63350,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin) 7(columna-inexistente)
+63354,funciona
+63385,funciona
+63387,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin) 7(columna-inexistente)
+63388,no-presentado
+63389,no-presentado
+63393,falla 5(salida-archivo)
+63396,no-presentado
+63397,funciona
+63399,funciona
+63402,funciona
+63412,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 6(stdin) 7(columna-inexistente)
+63415,no-presentado
+63418,falla 7(columna-inexistente)
+63419,no-presentado
+63420,no-compila
+63425,no-presentado
+63447,no-presentado
+63456,funciona
+63457,no-presentado
+63461,falla 7(columna-inexistente)
+63493,no-presentado
+63494,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 5(salida-archivo) 6(stdin)
+63546,funciona
+63547,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 5(salida-archivo) 6(stdin)
+63647,no-presentado
+63696,no-presentado
+63700,no-presentado
+63717,falla 2(apellido) 3(salario-desc) 4(departamento-salario) 5(salida-archivo) 6(stdin)
+63737,falla 5(salida-archivo)
+63776,falla 7(columna-inexistente)
+64016,no-presentado
