@@ -263,6 +263,7 @@ SortField ParseSortField(string text)
         throw new Exception($"Formato inválido en '{text}'. Use campo[:tipo[:orden]].");
 
     return new SortField(name, numeric, descending);
+    
 }
 void PrintHelp()
 {
