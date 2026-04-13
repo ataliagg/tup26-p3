@@ -160,6 +160,7 @@ void WriteOutput(string? filePath, string content)
 
     return (headers, rows);
 }
+
 List<Dictionary<string, string>> SortRows(
     List<Dictionary<string, string>> rows,
     string[] headers,
