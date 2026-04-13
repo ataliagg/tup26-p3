@@ -12,12 +12,14 @@ import tempfile
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TypedDict
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CSV = REPO_ROOT / "alumnos" / "tp1.csv"
 DEFAULT_PRACTICOS = REPO_ROOT / "practicos"
 RESULTS_CSV = REPO_ROOT / "resultados-p1.csv"
+RESULTS_MD = REPO_ROOT / "resultado-p1.md"
 MIN_PRESENTED_LINES = 20
 
 EMPLEADOS_CSV = """nombre,apellido,edad,salario,departamento
@@ -79,6 +81,13 @@ class Evaluation:
     detalle: str = ""
 
 
+class InformeFila(TypedDict):
+    legajo: int
+    nombre: str
+    estado: str
+    pruebas: list[str]
+
+
 def build_test_cases() -> list[TestCase]:
     return [
         TestCase(
@@ -135,18 +144,21 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Compila y prueba todas las entregas TP1/sortx.cs dentro de practicos."
     )
+    
     parser.add_argument(
         "--csv",
         type=Path,
         default=DEFAULT_CSV,
         help=f"Archivo con legajos. Default: {DEFAULT_CSV}",
     )
+    
     parser.add_argument(
         "--practicos",
         type=Path,
         default=DEFAULT_PRACTICOS,
         help=f"Carpeta raiz de practicos. Default: {DEFAULT_PRACTICOS}",
     )
+    
     parser.add_argument(
         "--legajo",
         dest="legajos",
@@ -154,23 +166,27 @@ def parse_args() -> argparse.Namespace:
         type=int,
         help="Evaluar solo uno o varios legajos. Repetible.",
     )
+    
     parser.add_argument(
         "--build-timeout",
         type=int,
         default=20,
         help="Timeout en segundos para compilar cada entrega. Default: 20",
     )
+    
     parser.add_argument(
         "--run-timeout",
         type=int,
         default=5,
         help="Timeout en segundos para cada prueba. Default: 5",
     )
+    
     parser.add_argument(
         "--verbose",
         action="store_true",
         help="Incluye el detalle de compilacion o de la prueba fallida.",
     )
+    
     return parser.parse_args()
 
 
@@ -390,7 +406,7 @@ def emit_results(results: list[Evaluation], verbose: bool) -> None:
     write_results_csv(results, RESULTS_CSV)
 
     if RESULTS_CSV.is_file():
-        print(f"Resultados guardados en: {RESULTS_CSV}", file=sys.stderr)
+        print(f"✅ Resultados guardados en: {RESULTS_CSV}", file=sys.stderr)
 
     writer = csv.writer(sys.stdout, lineterminator="\n")
     writer.writerow(["legajo", "resultado"])
@@ -403,19 +419,38 @@ def write_results_csv(results: list[Evaluation], output_path: Path) -> None:
     alumnos = leer_alumnos()
     with output_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle, lineterminator="\n")
-        writer.writerow(["legajo", "nombre", "resultado"])
+        writer.writerow(["legajo", "nombre", "comision", "resultado"])
 
         for item in results:
-            writer.writerow([item.legajo, alumnos.get(item.legajo, "Desconocido"), item.resultado])
+            alumno = alumnos.get(int(item.legajo), {"nombre": "Desconocido", "comision": "X"})
+            writer.writerow([item.legajo, alumno["nombre"], alumno["comision"], item.resultado])
 
-def leer_alumnos():
-    lineas = open("../alumnos/alumnos.md", "r").readlines()
-    lineas = [linea for linea in lineas if re.match(r"^\d{5}\s{2,}", linea)]
+
+def leer_alumnos() -> dict[int, dict[str, str]]:
+    lineas = (REPO_ROOT / "alumnos" / "alumnos.md").read_text(encoding="utf-8").splitlines()
     salida = {}
-    for e in lineas:
-        legajo, nombre = re.match(r"^\s*(\d{5})\s{2,}(.*)\(", e).groups()
-        salida[int(legajo)] = nombre.strip()
+    comision = None
+    for linea in lineas:
+        if linea.startswith("## C"):
+            comision = linea.removeprefix("## ").strip()
+            continue
+        if not re.match(r"^\d{5}\s{2,}", linea):
+            continue
+
+        columnas = [columna.strip() for columna in re.split(r"\s{2,}", linea.strip())]
+        columnas = (columnas + [""] * 7)[:7]
+        legajo, nombre, telefono, foto, github, practicos, pruebas = columnas
+        salida[int(legajo)] = {
+            "nombre": nombre,
+            "comision": comision or "",
+            "telefono": telefono,
+            "foto": foto,
+            "github": github,
+            "practicos": practicos,
+            "pruebas": pruebas,
+        }
     return salida
+
 
 def main() -> int:
     args = parse_args()
@@ -457,31 +492,89 @@ def main() -> int:
     return 0
 
 
+def _orden_estado(estado: str) -> int:
+    return {"🟢": 1, "🔵": 2, "🟡": 3, "🔴": 4}.get(estado, 0)
+
+
+def _orden_comision(comision: str) -> tuple[int, str]:
+    coincidencia = re.match(r"^C(\d+)$", comision.strip())
+    if coincidencia:
+        return int(coincidencia.group(1)), comision
+    return 999, comision
+
+
+def _estado_y_pruebas(resultado: str) -> tuple[str, list[str]]:
+    estado = resultado.split()[0]
+
+    if estado == "funciona":
+        return "🟢", ["✅"] * 7
+    if estado == "no-compila":
+        return "🟡", ["-"] * 7
+    if estado == "no-presentado":
+        return "🔴", ["-"] * 7
+
+    fallas = {int(valor) for valor in resultado.split()[1:] if valor.isdigit()}
+    pruebas = ["❌" if indice in fallas else "✅" for indice in range(1, 8)]
+    return "🔵", pruebas
+
+
+def _imprimir_bloque_estado(estado: str, titulo: str, filas: list[InformeFila], lineas: list[str]) -> None:
+    if not filas:
+        return
+
+    lineas.append(f"|  {estado}  | **{titulo}** |")
+    for fila in filas:
+        lineas.append(
+            f"|{fila['legajo']} | {fila['nombre']:<30} | {fila['estado']} | "
+            f"{' | '.join(fila['pruebas'])} |"
+        )
+
+
+def generar_informe(path: Path = RESULTS_CSV, output_path: Path = RESULTS_MD) -> None:
+    lineas: list[str] = ["# Resultados TP1: Sortx", ""]
+
+    por_comision: dict[str, list[InformeFila]] = {}
+
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.reader(handle)
+        next(reader, None)
+
+        for legajo, nombre, comision, resultado in reader:
+            estado, pruebas = _estado_y_pruebas(resultado)
+            por_comision.setdefault(comision or "X", []).append(
+                {
+                    "legajo": int(legajo),
+                    "nombre": nombre.strip('"'),
+                    "estado": estado,
+                    "pruebas": pruebas,
+                }
+            )
+
+    for comision in sorted(por_comision, key=_orden_comision):
+        filas = por_comision[comision]
+        filas.sort(key=lambda fila: (_orden_estado(fila["estado"]), fila["legajo"]))
+
+        lineas.append(f"## {comision}")
+        lineas.append("")
+        lineas.append("| Legajo | Nombre                          | R | T1 | T2 | T3 | T4 | T5 | T6 | T7 |")
+        lineas.append("|------|-----------------------------------|----|----|----|----|----|----|----|----|")
+
+        for estado, titulo in [
+            ("🟢", "FUNCIONA"),
+            ("🔵", "CON ERRORES"),
+            ("🟡", "NO COMPILA"),
+            ("🔴", "NO PRESENTO"),
+        ]:
+            bloque = [fila for fila in filas if fila["estado"] == estado]
+            if not bloque:
+                continue
+            _imprimir_bloque_estado(estado, titulo, bloque, lineas)
+
+        lineas.append("")
+
+    output_path.write_text("\n".join(lineas).rstrip() + "\n", encoding="utf-8")
+
+
 if __name__ == "__main__":
-    # print(leer_alumnos())
-
-    # main()
-    lineas = open("../resultados-p1.csv", "r").readlines()
-    lineas = [(linea.strip("\n+")+",,,,").split(",")[:5] for linea in lineas]
-    print(f"| {'Legajo':6} | {'Nombre':30} | {'Resultado':12} | {'Detalle':40} |")
-
-    for linea in lineas[1:]:
-        # print(linea)
-        legajo, apellido, nombre, resultado,_ = linea
-        nombre = (apellido.strip('"') + ", " + nombre.strip('"'))
-        salida = "-|-|-|-|-|-|-|"
-        if "falla" in resultado:
-            test = resultado.split(" ")[1:] if "falla" in resultado else []
-            salida = " "
-            for i in range(1, 8):
-                if f"{i}" in test:
-                    salida += "❌ |"
-                else:
-                    salida += "✅ |"
-            
-        resultado = resultado.replace("no-presentado", "🔴")
-        resultado = resultado.replace("no-compila", "🟡")
-        resultado = resultado.replace("falla", "🔵")
-        resultado = resultado.replace("funciona", "🟢")
-        resultado = resultado.split(" ")[0]
-        print(f"|{legajo} | {nombre:30} | {resultado} | {salida} ")
+    main()
+    generar_informe()

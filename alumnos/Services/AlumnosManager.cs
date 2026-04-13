@@ -1,6 +1,21 @@
 namespace Tup26.AlumnosApp;
 
+static class Log {
+    public static void Escribir(string mensaje, ConsoleColor color = ConsoleColor.Black) {
+        ConsoleColor colorAnterior = Console.ForegroundColor;
+        Console.ForegroundColor = color;
+        Console.WriteLine(mensaje);
+        Console.ForegroundColor = colorAnterior;
+    }
+
+    public static void Debug(string mensaje) => Escribir(mensaje, ConsoleColor.Blue);
+    public static void Error(string mensaje) => Escribir(mensaje, ConsoleColor.Red);
+    public static void Info(string mensaje) => Escribir(mensaje, ConsoleColor.Green);
+    public static void Warning(string mensaje) => Escribir(mensaje, ConsoleColor.Yellow);
+}
+
 static class AlumnosManager {
+
     public static Alumnos Cargar(string rutaArchivo) {
         Alumnos alumnos = new(Array.Empty<Alumno>());
         string comisionActual = string.Empty;
@@ -30,7 +45,7 @@ static class AlumnosManager {
             }
         }
         catch (Exception ex) {
-            Console.WriteLine($"Error al leer el archivo: {ex.Message}");
+            Log.Error($"Error al leer el archivo: {ex.Message}");
         }
 
         return alumnos;
@@ -71,16 +86,16 @@ static class AlumnosManager {
             }
 
             File.WriteAllText(rutaArchivo, sb.ToString().TrimEnd() + Environment.NewLine, Encoding.UTF8);
-            Console.WriteLine($"Alumnos guardados en: {rutaArchivo}");
+            Log.Info($"Alumnos guardados en: {rutaArchivo}");
         }
         catch (Exception ex) {
-            Console.WriteLine($"Error al guardar el archivo: {ex.Message}");
+            Log.Error($"Error al guardar el archivo: {ex.Message}");
         }
     }
 
     public static void Listar(Alumnos alumnos, string titulo = "Listado de Alumnos") {
         if (alumnos == null || alumnos.Count == 0) {
-            Console.WriteLine("No hay alumnos para mostrar.");
+            Log.Warning("No hay alumnos para mostrar.");
             return;
         }
 
@@ -123,27 +138,27 @@ static class AlumnosManager {
         foreach (Alumno alumno in alumnos) {
             string nombreCarpeta = alumno.CarpetaNombre;
             string rutaCarpeta   = Path.Combine(rutaBase, nombreCarpeta);
-
             try {
                 List<string> carpetasConLegajo = BuscarCarpetasMismoLegajo(rutaBase, alumno.Legajo);
 
                 if (carpetasConLegajo.Count == 0) {
                     Directory.CreateDirectory(rutaCarpeta);
-                    Console.WriteLine($"➕ Carpeta creada: {rutaCarpeta}");
+                    Log.Debug($" ➕ {rutaCarpeta, -40}");
                 } else if (carpetasConLegajo.Count == 1){
                     string rutaCarpetaExistente = carpetasConLegajo[0];
+                    string rutaRelativa = Path.GetRelativePath(rutaBase, rutaCarpetaExistente); 
                     if (string.Equals(rutaCarpetaExistente, rutaCarpeta, StringComparison.OrdinalIgnoreCase)) {
-                        Console.WriteLine($"✅ Carpeta existente correcta: {rutaCarpetaExistente}");
+                        Log.Info($" ✅ {rutaRelativa, -40}");
                     } else {
-                        RenombrarCarpeta(rutaBase, rutaCarpetaExistente, rutaCarpeta);
-                        Console.WriteLine($"🔄 Carpeta renombrada: {rutaCarpetaExistente} -> {rutaCarpeta}");
+                        RenombrarCarpeta(rutaCarpetaExistente, rutaCarpeta);
+                        Log.Warning($" 🔄 {rutaRelativa, -40} → {nombreCarpeta}");
                     }
                 } else {
-                    Console.WriteLine($" ⚠️ Aviso: existen varias carpetas con el legajo {alumno.Legajo}. Revisar manualmente las duplicadas.");
+                    Log.Warning($" ⚠️  {alumno.Legajo}. Revisar manualmente las duplicadas.");
                 }
             }
             catch (Exception ex) {
-                Console.WriteLine($"Error al crear la carpeta para {nombreCarpeta}: {ex.Message}");
+                Log.Error($"Error al crear la carpeta para {nombreCarpeta}: {ex.Message}");
             }
         }
     }
@@ -152,7 +167,7 @@ static class AlumnosManager {
         string rutaBase = AppPaths.PracticosDirectory;
 
         if (!Directory.Exists(rutaBase)) {
-            Console.WriteLine($"No existe la carpeta base de prácticos: {rutaBase}");
+            Log.Error($"No existe la carpeta base de prácticos: {rutaBase}");
             return;
         }
 
@@ -178,10 +193,10 @@ static class AlumnosManager {
 
             try {
                 File.Copy(rutaFotoOrigen, rutaFotoDestino);
-                Console.WriteLine($"Foto copiada: {rutaFotoOrigen} -> {rutaFotoDestino}");
+                Log.Info($"Foto copiada: {rutaFotoOrigen} -> {rutaFotoDestino}");
             }
             catch (Exception ex) {
-                Console.WriteLine($"Error al copiar la foto para {alumno.CarpetaNombre}: {ex.Message}");
+                Log.Error($"Error al copiar la foto para {alumno.CarpetaNombre}: {ex.Message}");
             }
         }
     }
@@ -193,17 +208,17 @@ static class AlumnosManager {
         string carpetaPractico   = nombrePractico.ToLower();
 
         if (string.IsNullOrWhiteSpace(nombrePractico)) {
-            Console.WriteLine("Debe indicar el nombre del práctico a copiar.");
+            Log.Error("Debe indicar el nombre del práctico a copiar.");
             return;
         }
 
         if (!Directory.Exists(rutaOrigen)) {
-            Console.WriteLine($"No existe la carpeta del enunciado: {rutaOrigen}");
+            Log.Error($"No existe la carpeta del enunciado: {rutaOrigen}");
             return;
         }
 
         if (!Directory.Exists(rutaBasePracticos)) {
-            Console.WriteLine($"No existe la carpeta base de prácticos: {rutaBasePracticos}");
+            Log.Error($"No existe la carpeta base de prácticos: {rutaBasePracticos}");
             return;
         }
 
@@ -211,7 +226,7 @@ static class AlumnosManager {
             string rutaAlumno = Path.Combine(rutaBasePracticos, alumno.CarpetaNombre);
 
             if (!Directory.Exists(rutaAlumno)) {
-                Console.WriteLine($"No existe la carpeta del alumno: {rutaAlumno}");
+                Log.Error($"No existe la carpeta del alumno: {rutaAlumno}");
                 continue;
             }
 
@@ -219,10 +234,10 @@ static class AlumnosManager {
 
             try {
                 CopiarContenidoDirectorio(rutaOrigen, rutaDestino);
-                Console.WriteLine($"Enunciado copiado: {rutaOrigen} -> {rutaDestino}");
+                Log.Info($"Enunciado copiado: {rutaOrigen} -> {rutaDestino}");
             }
             catch (Exception ex) {
-                Console.WriteLine($"Error al copiar el enunciado para {alumno.CarpetaNombre}: {ex.Message}");
+                Log.Error($"Error al copiar el enunciado para {alumno.CarpetaNombre}: {ex.Message}");
             }
         }
     }
@@ -269,17 +284,17 @@ static class AlumnosManager {
                 bool actualizado = false;
 
                 if (!string.IsNullOrWhiteSpace(gitHub) && alumno.GitHub != gitHub) {
-                    Console.WriteLine($"  GitHub actualizado {alumno.CarpetaNombre}: '{alumno.GitHub}' -> '{gitHub}'");
+                    Log.Info($"  GitHub actualizado {alumno.CarpetaNombre}: '{alumno.GitHub}' -> '{gitHub}'");
                     alumno.GitHub = gitHub;
                     actualizado = true;
                 }
 
                 if (!actualizado) {
-                    Console.WriteLine($"  Sin cambios: {alumno.CarpetaNombre}");
+                    Log.Warning($"  Sin cambios: {alumno.CarpetaNombre}");
                 }
             }
             catch (Exception ex) {
-                Console.WriteLine($"Error al leer perfil {rutaPerfil}: {ex.Message}");
+                Log.Error($"Error al leer perfil {rutaPerfil}: {ex.Message}");
             }
         }
     }
@@ -317,10 +332,10 @@ static class AlumnosManager {
 
             sb.AppendLine("]");
             File.WriteAllText(rutaArchivo, sb.ToString(), Encoding.UTF8);
-            Console.WriteLine($"Alumnos guardados en JSON: {rutaArchivo}");
+            Log.Info($"Alumnos guardados en JSON: {rutaArchivo}");
         }
         catch (Exception ex) {
-            Console.WriteLine($"Error al guardar el archivo JSON: {ex.Message}");
+            Log.Error($"Error al guardar el archivo JSON: {ex.Message}");
         }
     }
 
@@ -341,10 +356,10 @@ static class AlumnosManager {
             }
 
             File.WriteAllText(rutaArchivo, sb.ToString(), new UTF8Encoding(false));
-            Console.WriteLine($"Contactos vCard guardados en: {rutaArchivo}");
+            Log.Info($"Contactos vCard guardados en: {rutaArchivo}");
         }
         catch (Exception ex) {
-            Console.WriteLine($"Error al guardar el archivo vCard: {ex.Message}");
+            Log.Error($"Error al guardar el archivo vCard: {ex.Message}");
         }
     }
 
@@ -566,7 +581,7 @@ static class AlumnosManager {
             ?? carpetasConLegajo[0];
     }
 
-    static void RenombrarCarpeta(string rutaBase, string rutaActual, string rutaNueva) {
+    static void RenombrarCarpeta(string rutaActual, string rutaNueva) {
         if (!Directory.Exists(rutaNueva)) {
             Directory.Move(rutaActual, rutaNueva);
             return;
@@ -576,7 +591,12 @@ static class AlumnosManager {
             throw new IOException($"Ya existe una carpeta destino: {rutaNueva}");
         }
 
-        string rutaTemporal = Path.Combine(rutaBase, $".tmp-renombrar-{Guid.NewGuid():N}");
+        string? rutaDirectorioPadre = Path.GetDirectoryName(rutaActual);
+        if (string.IsNullOrEmpty(rutaDirectorioPadre)) {
+            throw new IOException($"No se pudo determinar el directorio base para renombrar: {rutaActual}");
+        }
+
+        string rutaTemporal = Path.Combine(rutaDirectorioPadre, $".tmp-renombrar-{Guid.NewGuid():N}");
         Directory.Move(rutaActual, rutaTemporal);
         Directory.Move(rutaTemporal, rutaNueva);
     }

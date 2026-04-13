@@ -11,8 +11,8 @@ class Alumno {
     public List<Estado> practicos = new();
     public List<Estado> examenes = new();
 
-    public string NombreCompleto => $"{Apellido}, {Nombre}".Trim().Trim(',');
-    public string CarpetaNombre => $"{Legajo} - {NombreCompleto} {(practicos[0] == Estado.Aprobado ? "" : "⚠️")}";
+    public string NombreCompleto => $"{Apellido.Trim()}, {Nombre.Trim()}";
+    public string CarpetaNombre => $"{Legajo} - {NombreCompleto}";
     public string TelefonoId => FormatearTelefonoId(Telefono);
     public bool ConGithub => !string.IsNullOrWhiteSpace(GitHub) && GitHub.Length > 3;
     public bool ConFoto => TieneFoto;

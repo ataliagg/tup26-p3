@@ -96,7 +96,7 @@ class WAppService {
             Ejecutar([ "groups", "refresh" ]);
         }
         catch (InvalidOperationException ex) when (EsErrorAutenticacionWacli(ex)) {
-            Console.WriteLine("Aviso: wacli no está autenticado; se usa la base local para grupos y contactos.");
+            Log.Warning("Aviso: wacli no está autenticado; se usa la base local para grupos y contactos.");
         }
     }
 
@@ -466,7 +466,7 @@ class WAppService {
         string rutaDb = Path.Combine(ObtenerDirectorioStore(), "wacli.db");
 
         if (!File.Exists(rutaDb)) {
-            Console.WriteLine($"Aviso: no existe la base local de wacli: {rutaDb}");
+            Log.Warning($"Aviso: no existe la base local de wacli: {rutaDb}");
             return new();
         }
 
@@ -531,7 +531,7 @@ class WAppService {
         string salida = EjecutarYObtenerSalida(argumentos);
 
         if (!string.IsNullOrWhiteSpace(salida)) {
-            Console.WriteLine(salida);
+            Log.Info(salida);
         }
     }
 

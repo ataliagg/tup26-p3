@@ -6,7 +6,7 @@ LegajX  Nombre y Apellido                Teléfono         Foto  GitHub         
 ------  -------------------------------  ---------------  ----  -----------------------  -----------------  -----------------
 63415   Chavez, Lucas Francisco          (381) 301-3490   Si    lucaschavez10lc-ai       🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63419   Coronel, Tomás                   (381) 678-0335   Si    tomicor979-lgtm          🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
-63330   Cuevas, Joel Alejandro           —                No    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
+63330   Cuevas, Joel Alejandro           (-)              No    -                        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63396   Gil Garau, Atalia Trinidad       (381) 456-4405   Si    ataliagg                 🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63457   Gonzalez Dupuy, Ignacio          (381) 683-1233   Si    ignas11                  🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️
 63700   Jimenez, Nelson Maximiliano      (381) 639‑2861   No    maximilianojimnez        🔴⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️  ⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️⚪️

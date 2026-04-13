@@ -12,7 +12,7 @@ class GitHub {
 
     public bool AgregarColaborador(string usuario) {
         string? salida = Ejecutar( $"Error al agregar colaborador '{usuario}'",
-            "/collaborators/{usuario}", "--method", "PUT", "-f", "permission=push" );
+            $"/collaborators/{usuario}", "--method", "PUT", "-f", "permission=push" );
 
         return salida is not null;
     }
@@ -42,7 +42,7 @@ class GitHub {
         string estado = soloAbiertos ? "open" : "all";
 
         string? salida = Ejecutar( "Error al listar PRs",
-            "/pulls?state={estado}", "--paginate", "--jq", @".[] | ""\(.number)\t\(.title)""" );
+            $"/pulls?state={estado}", "--paginate", "--jq", @".[] | ""\(.number)\t\(.title)""" );
 
         if (salida is null) { return new(); }
 
@@ -67,17 +67,17 @@ class GitHub {
         foreach ((int Numero, string Titulo) pr in prs) {
             if (ExtraerLegajo(pr.Titulo) == 0) {
                 if (count++ == 0) {
-                    Console.WriteLine("= PR Sin legajo válido =");
+                    Log.Warning("= PR Sin legajo válido =");
                 }
 
-                Console.WriteLine($"- #{pr.Numero}: {pr.Titulo}");
+                Log.Warning($"- #{pr.Numero}: {pr.Titulo}");
             }
         }
 
         if (count == 0) {
-            Console.WriteLine("Todos los PRs tienen un legajo válido en el título.");
+            Log.Info("Todos los PRs tienen un legajo válido en el título.");
         } else {
-            Console.WriteLine($"Total de PRs sin legajo válido: {count}");
+            Log.Warning($"Total de PRs sin legajo válido: {count}");
         }
 
         return count;
@@ -93,17 +93,17 @@ class GitHub {
 
             if (detallePr.EsMergeable == false) {
                 if (count++ == 0) {
-                    Console.WriteLine("= PR con conflictos =");
+                    Log.Warning("= PR con conflictos =");
                 }
 
-                Console.WriteLine($"- #{pr.Numero}: {pr.Titulo}");
+                Log.Warning($"- #{pr.Numero}: {pr.Titulo}");
             }
         }
 
         if (count == 0) {
-            Console.WriteLine("No se encontraron PRs con conflictos.");
+            Log.Info("No se encontraron PRs con conflictos.");
         } else {
-            Console.WriteLine($"Total de PRs con conflictos: {count}");
+            Log.Warning($"Total de PRs con conflictos: {count}");
         }
 
         return count;
@@ -123,10 +123,10 @@ class GitHub {
 
                 if (nuevoTitulo != pr.Titulo) {
                     if (count++ == 0) {
-                        Console.WriteLine("= PRs a actualizar =");
+                        Log.Info("= PRs a actualizar =");
                     }
 
-                    Console.WriteLine($"Actualizando PR #{pr.Numero}:\n > {pr.Titulo}\n < {nuevoTitulo}");
+                    Log.Info($"Actualizando PR #{pr.Numero}:\n > {pr.Titulo}\n < {nuevoTitulo}");
 
                     if (!simular) {
                         CambiarTitulo(pr.Numero, nuevoTitulo);
@@ -136,9 +136,9 @@ class GitHub {
         }
 
         if (count == 0) {
-            Console.WriteLine("No se encontraron PRs para actualizar.");
+            Log.Info("No se encontraron PRs para actualizar.");
         } else {
-            Console.WriteLine($"Total de PRs a actualizar: {count}");
+            Log.Info($"Total de PRs a actualizar: {count}");
         }
 
         return count;
@@ -147,7 +147,7 @@ class GitHub {
 
     public (string Estado, bool EsMergeable) ObtenerEstado(int numeroPR) {
         string? salida = Ejecutar( $"Error al consultar el estado del PR #{numeroPR}",
-            "/pulls/{numeroPR}", "--jq", @"""\(.state)\t\(.mergeable)""" );
+            $"/pulls/{numeroPR}", "--jq", @"""\(.state)\t\(.mergeable)""" );
 
         if (salida is null) {
             return (string.Empty, false);
@@ -165,12 +165,12 @@ class GitHub {
         var detalle = ObtenerEstado(numeroPR);
 
         if (!string.Equals(detalle.Estado, "open")) {
-            Console.WriteLine($"Error al mergear el PR #{numeroPR}: el PR no está abierto.");
+            Log.Error($"Error al mergear el PR #{numeroPR}: el PR no está abierto.");
             return false;
         }
 
         string? salida = Ejecutar( $"Error al mergear el PR #{numeroPR}",
-            "/pulls/{numeroPR}/merge", "--method", "PUT", "-f", "merge_method=merge" );
+            $"/pulls/{numeroPR}/merge", "--method", "PUT", "-f", "merge_method=merge" );
 
         return salida is not null;
     }
@@ -178,7 +178,7 @@ class GitHub {
 
     public int MergeTP(int numeroTP) {
         if (numeroTP <= 0) {
-            Console.WriteLine("Error al mergear PRs: el número de TP debe ser mayor a cero.");
+            Log.Error("Error al mergear PRs: el número de TP debe ser mayor a cero.");
             return 0;
         }
 
@@ -187,31 +187,31 @@ class GitHub {
             .ToList();
 
         if (prs.Count == 0) {
-            Console.WriteLine($"No se encontraron PRs abiertos del TP {numeroTP}.");
+            Log.Info($"No se encontraron PRs abiertos del TP {numeroTP}.");
             return 0;
         }
 
         int count = 0;
 
         foreach ((int Numero, string Titulo) pr in prs) {
-            Console.WriteLine($"Mergeando PR #{pr.Numero}: {pr.Titulo}");
+            Log.Info($"Mergeando PR #{pr.Numero}: {pr.Titulo}");
 
             if (Merge(pr.Numero)) { count++; }
         }
 
-        Console.WriteLine($"PRs mergeados del TP {numeroTP}: {count}/{prs.Count}");
+        Log.Info($"PRs mergeados del TP {numeroTP}: {count}/{prs.Count}");
         return count;
     }
 
 
     public bool CambiarTitulo(int numeroPR, string titulo) {
         if (string.IsNullOrWhiteSpace(titulo)) {
-            Console.WriteLine("Error al cambiar el título del PR: el nuevo título no puede estar vacío.");
+            Log.Error("Error al cambiar el título del PR: el nuevo título no puede estar vacío.");
             return false;
         }
 
         string? salida = Ejecutar( $"Error al cambiar el título del PR #{numeroPR}",
-            "/pulls/{numeroPR}", "--method", "PATCH", "-f", $"title={titulo}" );
+            $"/pulls/{numeroPR}", "--method", "PATCH", "-f", $"title={titulo}" );
 
         return salida is not null;
     }
@@ -219,7 +219,7 @@ class GitHub {
 
     public List<(string Titulo, DateTimeOffset FechaHora)> Commits(int numeroPR) {
         string? salida = Ejecutar( $"Error al listar commits del PR #{numeroPR}",
-            "/pulls/{numeroPR}/commits", "--paginate", "--jq", @".[] | ""\(.commit.message | split(""\n"")[0])\t\(.commit.author.date)""" );
+            $"/pulls/{numeroPR}/commits", "--paginate", "--jq", @".[] | ""\(.commit.message | split(""\n"")[0])\t\(.commit.author.date)""" );
 
         if (salida is null) { return new(); }
 
@@ -239,7 +239,7 @@ class GitHub {
     }
 
     
-    string? Ejecutar(string mensajeError, params string[] argumentos) {
+    string? Ejecutar(string mensajeError, string endpoint, params string[] argumentos) {
         ProcessStartInfo startInfo = new ProcessStartInfo {
             FileName = "gh",
             RedirectStandardOutput = true,
@@ -247,7 +247,8 @@ class GitHub {
         };
 
         startInfo.ArgumentList.Add("api");
-        startInfo.ArgumentList.Add($"repos/{owner}/{repo}");
+        string rutaRelativa = endpoint.TrimStart('/');
+        startInfo.ArgumentList.Add($"repos/{owner}/{repo}/{rutaRelativa}");
         foreach (string argumento in argumentos) {
             startInfo.ArgumentList.Add(argumento);
         }
@@ -261,7 +262,7 @@ class GitHub {
 
         if (proceso.ExitCode != 0) {
             string detalle = string.IsNullOrWhiteSpace(error) ? salida : error;
-            Console.WriteLine($"{mensajeError}: {detalle}");
+            Log.Error($"{mensajeError}: {detalle}");
             return null;
         }
 
@@ -278,9 +279,10 @@ class GitHub {
     }
 
     static int ExtraerTP(string titulo) {
-        Match match = Regex.Match(titulo, @"\bTP\d+\b", RegexOptions.IgnoreCase);
-        return match.Success ? int.Parse(match.Value[2..]) : 0;
+        Match match = Regex.Match(titulo, @"\bTP\s*\d+\b", RegexOptions.IgnoreCase);
+        return match.Success ? int.Parse(match.Value[2..].Trim()) : 0;
     }
+
 
     static int ExtraerLegajo(string titulo) {
         Match match = Regex.Match(titulo, @"\b\d{5}\b");

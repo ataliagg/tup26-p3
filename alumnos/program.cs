@@ -16,17 +16,16 @@ class Program {
             alumno.Practico(1, Estado.Vacio);
         }
         foreach(var (legajo, resuelto) in practicos) {
-            Console.WriteLine($"Legajo: {legajo} - Resuelto: {resuelto}");
+            // Console.WriteLine($"Legajo: {legajo} - Resuelto: {resuelto}");
             var alumno = alumnos.BuscarPorLegajo(legajo);
             if (alumno != null) {
                 alumno.Practico(1, resuelto ? Estado.Aprobado : Estado.Desaprobado);
-                // alumno.Practico1Resuelto = resuelto;
             }
         }
 
-        AlumnosManager.CrearCarpetas(alumnos);
-        alumnos = alumnos.ConPractico(1, Estado.Desaprobado);
-        AlumnosManager.Guardar(alumnos, "alumnos-p1-sin-presentar.md");
+        // AlumnosManager.CrearCarpetas(alumnos);
+        // alumnos = alumnos.ConPractico(1, Estado.Desaprobado);
+        // AlumnosManager.Guardar(alumnos, "alumnos-p1-sin-presentar.md");
 
         // AlumnosManager.Listar(alumnos.ConFotos(false), "Alumnos sin foto");
         // AlumnosManager.Listar(alumnos.ConTelefono(false), "Alumnos sin telefono");
@@ -60,10 +59,10 @@ class Program {
         // AlumnosManager.GuardarVCard(alumnos.ParaAgregar().EnComision("C9"), "alumnos-agregar-c9.vcf");
         // AlumnosManager.CopiarEnunciadoPracticos(alumnos, "tp1");
 
-        // GitHub gh = new GitHub();
-        // if (gh.PRSinLegajo() == 0) { 
-        //     gh.NormalizarTitulos(alumnos, simular: false); 
-        // } 
+        GitHub gh = new GitHub();
+        if (gh.PRSinLegajo() == 0) { 
+            gh.NormalizarTitulos(alumnos, simular: false); 
+        } 
         // foreach(var pr in gh.PullRequests()) {
         //     var commits   = gh.Commits(pr.Numero);
         //     var detallePr = gh.ObtenerEstado(pr.Numero);
