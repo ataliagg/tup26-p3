@@ -160,7 +160,6 @@ void WriteOutput(string? filePath, string content)
 
     return (headers, rows);
 }
-
 List<Dictionary<string, string>> SortRows(
     List<Dictionary<string, string>> rows,
     string[] headers,
@@ -246,10 +245,10 @@ SortField ParseSortField(string text)
     {
         if (parts[1] == "num")
             numeric = true;
-        else if (parts[1] == "text")
+        else if (parts[1] == "text" || parts[1] == "alpha")
             numeric = false;
         else
-            throw new Exception($"Tipo inválido en '{text}'. Use 'num' o 'text'.");
+            throw new Exception($"Tipo inválido en '{text}'. Use 'num', 'text' o 'alpha'.");
     }
     if (parts.Length >= 3)
     {
@@ -264,6 +263,7 @@ SortField ParseSortField(string text)
         throw new Exception($"Formato inválido en '{text}'. Use campo[:tipo[:orden]].");
 
     return new SortField(name, numeric, descending);
+    
 }
 void PrintHelp()
 {
