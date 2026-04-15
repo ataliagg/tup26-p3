@@ -245,9 +245,7 @@ SortField ParseSortField(string text)
     {
         if (parts[1] == "num")
             numeric = true;
-        else if (parts[1] == "text")
-            numeric = false;
-        else if (parts[1] == "alpha")
+        else if (parts[1] == "text" || parts[1] == "alpha")
             numeric = false;
         else
             throw new Exception($"Tipo inválido en '{text}'. Use 'num', 'text' o 'alpha'.");
