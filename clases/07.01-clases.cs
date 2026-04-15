@@ -3,8 +3,7 @@ using static System.Console;
 var p3 = Punto3D(10, 20, 40);
 
 Mover(p3);
-interface IPunto2D
-{
+interface IPunto2D {
     int X {get;set;}
     int Y {get;set;}
 }
@@ -22,8 +21,7 @@ p1.X = 10;
 p1.Mover(3,-10);
 WriteLine($"Punto(x: {p1.X}, {p1.Y})");
 
-class Punto : IPunto2D
-{
+class Punto : IPunto2D {
     public Punto(int x, int y) {
         this.x = x;
         this.y = y;
@@ -53,8 +51,7 @@ class Punto : IPunto2D
     }
     public int Y() => this.y;
 
-    public void Mover(int dx, int dy)
-    {
+    public void Mover(int dx, int dy) {
         if(x < 0) { this.x = 0; }
         this.x += dx;
         this.y += dy;
@@ -65,10 +62,8 @@ class Punto : IPunto2D
 }
 
 
-class Punto2D
-{
-    Punto2D(int x, int y)
-    {
+class Punto2D {
+    Punto2D(int x, int y) {
         this.X = x;
         this.Y = y;
     }
@@ -80,10 +75,8 @@ class Punto2D
     }
 }
 
-class Punto3D : Punto2D
-{
-    Punto3D(int x, int y, int z) : base(x,y)
-    {
+class Punto3D : Punto2D {
+    Punto3D(int x, int y, int z) : base(x,y) {
         this.Z = z;
     }
     int Z {get;set;}
