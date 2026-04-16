@@ -48,7 +48,7 @@ class Program {
             gh.NormalizarTitulos(alumnos, simular: false); 
         } 
 
-        AlumnosManager.CopiarEnunciadoPracticos(alumnos, "tp1", forzar: false);
+        AlumnosManager.CopiarEnunciadoPracticos(alumnos, "tp2", forzar: false);
         // foreach(var pr in gh.PullRequests()) {
         //     var commits   = gh.Commits(pr.Numero);
         //     var detallePr = gh.ObtenerEstado(pr.Numero);
