@@ -1,18 +1,9 @@
 class Compilador {
-    public static Nodo Parse(string expresion) { 
-        // prepara token / cursor para recorrer la expresión
-        return ParseExpresion();
+    char[] tokens (string expresion) {
+        // Implementar tokenización aquí
     }
-
-    Nodo ParseExpresion() {
-        var nodo = ParseTermino();
-        while (token == '+' || token == '-') {
-            string operador = token;
-            AvanzarToken();
-            var terminoDerecho = ParseTermino();
-            nodo = new NodoOperacion( nodo, operador, terminoDerecho);
-        }
-        return nodo;    
+    tekenizador Tokenizar(string expresion) {
+        // Implementar tokenización aquí
     }
     Nodo ParseTermino() {
         var nodo = ParseFactor();
@@ -24,7 +15,46 @@ class Compilador {
         }
         return nodo;    
     }
-       
+    Nodo ParseExpresion() {
+        var nodo = ParseTermino();
+        while (token == '+' || token == '-') {
+            string operador = token;
+            AvanzarToken();
+            var terminoDerecho = ParseTermino();
+            nodo = new NodoOperacion( nodo, operador, terminoDerecho);
+        }
+        return nodo;    
+    }
+    Nodo ParseFactor(){
+
+        if (token == '+') {
+            AvanzarToken();
+            return ParseFactor();
+        }
+        if (token == '-') {
+            AvanzarToken();
+            return new NodoOperacion(new NodoValor(0), "-", ParseFactor());
+        }
+        if (token == '(') {
+            AvanzarToken();
+            var nodo = ParseExpresion();
+            if (token == ')') {
+                AvanzarToken();
+                return nodo;
+            } else 
+                throw new Exception("Se esperaba ')'");
+        }
+        if (EsNumero(token)) {
+            var valor = int.Parse(token);
+            AvanzarToken();
+            return new NodoValor(valor);
+        }
+        if (token == 'x' || token == 'X') {
+            AvanzarToken();
+            return new NodoVariable();
+        }
+        throw new Exception("Token inesperado: " + token);
+    }
 
 
 
