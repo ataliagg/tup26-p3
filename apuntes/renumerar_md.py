@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Renombra archivos Markdown del tipo aa.bb-*.md.
+"""Renombra archivos Markdown del tipo AA.BBB-*.md.
 
 - Preserva aa.
 - Reasigna bb en orden ascendente dentro de cada grupo aa.
-- La nueva numeración empieza en 10 y avanza de 10 en 10.
+- La nueva numeración empieza en 010 y avanza de 10 en 10.
 - Usa un renombrado en dos pasos para evitar colisiones.
 """
 
@@ -18,6 +18,8 @@ from pathlib import Path
 from typing import Iterable
 
 PATTERN = re.compile(r"^(?P<aa>\d{2,})\.(?P<bb>\d{2,})-(?P<rest>.+)\.md$")
+BB_START = 10
+BB_STEP = 10
 
 
 @dataclass(frozen=True)
@@ -38,14 +40,7 @@ def find_matches(root: Path) -> list[Match]:
         if match is None:
             continue
 
-        matches.append(
-            Match(
-                path=path,
-                aa=match.group("aa"),
-                bb=int(match.group("bb")),
-                rest=match.group("rest"),
-            )
-        )
+        matches.append( Match( path=path, aa=match.group("aa"), bb=int(match.group("bb")), rest=match.group("rest"), ) )
 
     return matches
 
@@ -60,7 +55,7 @@ def build_renames(matches: Iterable[Match]) -> list[tuple[Path, Path]]:
     for aa in sorted(grouped):
         grupo = sorted(grouped[aa], key=lambda item: (int(item.bb), item.rest.lower(), item.path.name.lower()))
         for index, item in enumerate(grupo, start=1):
-            new_bb = index * 10
+            new_bb = BB_START + (index - 1) * BB_STEP
             new_name = f"{aa}.{new_bb:03d}-{item.rest}.md"
             renames.append((item.path, item.path.with_name(new_name)))
 

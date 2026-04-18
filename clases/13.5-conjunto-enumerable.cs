@@ -1,5 +1,5 @@
-using System;
-using System.Collections.Generic;
+// -- Conjunto genérico con List<T>, IEquatable<T> y IEnumerable<T> --
+// En esta clase agregamos `IEnumerable<T>` para recorrer los elementos del conjunto.
 
 static class Program {
     public static void Main() {
@@ -19,23 +19,22 @@ static class Program {
         Console.WriteLine($" - Contiene  Bob?: {clase.Contiene(b1)}");  // True
         Console.WriteLine($" - Contiene  Carlos?: {clase.Contiene(new Alumno("Carlos", 25))}");  // False
         Console.WriteLine($" Conjunto<Alumno>: {clase}"); // { Ana (20 años), Bob (22 años) }
+        
+        Console.WriteLine("\n== Alumnos (Recorrido con foreach) ==");
         foreach (var alumno in clase.Elementos) {
             Console.WriteLine($" - {alumno}");
         }
     }
 }
 
-class Alumno(string nombre, int legajo) : IEquatable<Alumno> {
-    public string Nombre => nombre;
-    public int Legajo => legajo;
-    public override string ToString() => $"{nombre} ({legajo} años)";
-
+record class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
     public bool Equals(Alumno? otro) {
-        if (otro is null) {
-            return false;
-        }
+        if (otro is null) { return false; }
         return this.Legajo == otro.Legajo;
     }
+
+    public override int GetHashCode() =>Legajo.GetHashCode();
+    public override string ToString() => $"{Nombre} (Legajo: {Legajo})";
 }
 
 interface IConjunto<T> where T : IEquatable<T>  {
@@ -44,7 +43,7 @@ interface IConjunto<T> where T : IEquatable<T>  {
     bool Contiene(T valor);
     int Count { get; }
 
-    IReadOnlyList<T> Elementos { get; }
+    IEnumerable<T> Elementos { get; }
 }
 
 class Conjunto<T> : IConjunto<T> where T : IEquatable<T> {
@@ -55,12 +54,12 @@ class Conjunto<T> : IConjunto<T> where T : IEquatable<T> {
     }
 
     public void Agregar(T valor) {
-        if (!Contiene(valor)) {
-            elementos.Add(valor);
-        }
+        if (Contiene(valor)) { return; }
+        elementos.Add(valor);
     }
 
     public void Eliminar(T valor) {
+        if(!Contiene(valor)) { return; } 
         elementos.Remove(valor);
     }
 
@@ -68,8 +67,9 @@ class Conjunto<T> : IConjunto<T> where T : IEquatable<T> {
         return elementos.Contains(valor);
     }
 
-    public IReadOnlyList<T> Elementos => elementos.ToList();
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
+    public IEnumerable<T> Elementos => elementos;
     public int Count => elementos.Count;
+
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
 }
 

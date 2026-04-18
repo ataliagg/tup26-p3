@@ -1,0 +1,216 @@
+{
+  "main": {
+    "id": "4c12b5123a7be77d",
+    "type": "split",
+    "children": [
+      {
+        "id": "1080e59e7f164687",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "94123b98dab7b572",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "apuntes/02.220-principios-solid-csharp.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "02.220-principios-solid-csharp"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "68f467a1bb0bb102",
+    "type": "split",
+    "children": [
+      {
+        "id": "b643866f975b66ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3152724450eaf770",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "fa35962137dc94e1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "d750f01323c8dadb",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "11260fea95bc6ecb",
+    "type": "split",
+    "children": [
+      {
+        "id": "abdc909ea26f523c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "17dbd4c05e378680",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "apuntes/02.220-principios-solid-csharp.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de 02.220-principios-solid-csharp"
+            }
+          },
+          {
+            "id": "0bac9bd17788d352",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "apuntes/02.220-principios-solid-csharp.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes de 02.220-principios-solid-csharp"
+            }
+          },
+          {
+            "id": "6bb01a3b125355b9",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "7e61d83894faf680",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "a07dbaa0bc3648a8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "apuntes/02.220-principios-solid-csharp.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema de 02.220-principios-solid-csharp"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "94123b98dab7b572",
+  "lastOpenFiles": [
+    "apuntes/04.130-tutorial-razor-aspnet.md",
+    "apuntes/04.120-motor-planilla.md",
+    "apuntes/04.110-tutorial-agente-shell-csharp.md",
+    "apuntes/02.260-tutorial-linq-basado-en-video-art-of-engineer.md",
+    "apuntes/presentacion/02.250-linq.md",
+    "apuntes/02.240-linq.md",
+    "apuntes/presentacion/02.230-switch-expression-y-pattern-matching.md",
+    "apuntes/presentacion/02.190-funciones-delegados-y-eventos.md",
+    "apuntes/04.120-tutorial-agente-shell-csharp.md",
+    "apuntes/04.200-tutorial-razor-aspnet.md",
+    "apuntes/linq-presentacion.md",
+    "apuntes/en-este-repo-creame-un-proyecto-c-de-consola-llamado.md",
+    "apuntes/Claude.pdf",
+    "apuntes/04.130-motor-planilla.md",
+    "apuntes/02.220-principios-solid-csharp.md",
+    "apuntes/02.180-control-de-flujo-y-manejo-de-excepciones.md",
+    "apuntes/02.170-funciones-delegados-y-eventos.md",
+    "apuntes/02.150-interfaces-y-contratos.md",
+    "apuntes/02.130-null-y-tipos-anulables.md",
+    "apuntes/02.110-clases-y-objetos.md",
+    "apuntes/02.090-tipos-compuestos.md",
+    "apuntes/02.070-strings.md",
+    "apuntes/02.050-enumeraciones.md",
+    "apuntes/02.030-tipos-basicos.md",
+    "apuntes/02.010-variables-memoria.md",
+    "apuntes/01.030-git-y-github-control-de-versiones-y-colaboracion.md",
+    "apuntes/01.020-terminal-y-bash-para-desarrollo.md"
+  ]
+}

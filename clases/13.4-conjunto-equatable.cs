@@ -1,5 +1,5 @@
-using System;
-using System.Collections.Generic;
+// -- Conjunto genérico con List<T> y IEquatable<T> --
+// En esta clase usamos `List<T>` y `IEquatable<T>` para comparar elementos del conjunto por su legajo.
 
 static class Program {
     public static void Main() {
@@ -15,24 +15,22 @@ static class Program {
         Console.Clear();
         Console.WriteLine("== Conjunto<Alumno> ==");
         Console.WriteLine($" Hay {clase.Count} elementos."); // 2
-        Console.WriteLine($" - Contiene  Ana?: {clase.Contiene(a2)}");  // True
+        Console.WriteLine($" - Contiene  Anita?: {clase.Contiene(a2)}");  // True
         Console.WriteLine($" - Contiene  Bob?: {clase.Contiene(b1)}");  // True
         Console.WriteLine($" - Contiene  Carlos?: {clase.Contiene(new Alumno("Carlos", 25))}");  // False
         Console.WriteLine($" Conjunto<Alumno>: {clase}"); // { Ana (20 años), Bob (22 años) }
     }
 }
 
-class Alumno(string nombre, int legajo) : IEquatable<Alumno> {
-    public string Nombre => nombre;
-    public int Legajo => legajo;
-    public override string ToString() => $"{nombre} ({legajo} años)";
+record class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
 
     public bool Equals(Alumno? otro) {
-        if (otro is null) {
-            return false;
-        }
+        if (otro is null) { return false; }
         return this.Legajo == otro.Legajo;
     }
+
+    public override int GetHashCode() =>Legajo.GetHashCode();
+    public override string ToString() => $"{Nombre} (Legajo: {Legajo})";
 }
 
 class Conjunto<T> {
@@ -43,20 +41,22 @@ class Conjunto<T> {
     }
 
     public void Agregar(T valor) {
-        if (!Contiene(valor)) {
-            elementos.Add(valor);
-        }
+        if (Contiene(valor)) { return; }
+        elementos.Add(valor);
     }
 
     public void Eliminar(T valor) {
+        if(!Contiene(valor)) { return; }
         elementos.Remove(valor);
     }
 
     public bool Contiene(T valor) {
-        return elementos.Contains(valor);
+        // List<T> ya implementa el método Contains, que a su vez utiliza el método Equals de los
+        //  elementos para determinar si el valor existe en la lista.
+        return elementos.Contains(valor); 
     }
 
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
     public int Count => elementos.Count;
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
 }
 

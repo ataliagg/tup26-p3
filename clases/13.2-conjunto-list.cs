@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+// -- Conjunto con lista interna --
+// En esta clase implementamos la clase Conjunto usando una lista interna de enteros.
 
 static class Program {
     public static void Main() {
@@ -41,12 +42,12 @@ class Conjunto {
     }
 
     public void Agregar(int valor) {
-        if (!Contiene(valor)) {
-            elementos.Add(valor);
-        }
+        if (Contiene(valor)) { return; }
+        elementos.Add(valor);
     }
 
     public void Eliminar(int valor) {
+        if (!Contiene(valor)) { return;  }
         elementos.Remove(valor);
     }
 
@@ -89,7 +90,7 @@ class Conjunto {
     public static Conjunto operator |(Conjunto a, Conjunto b) => Union(a, b);
     public static Conjunto operator &(Conjunto a, Conjunto b) => Interseccion(a, b);
 
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
     public int Count => elementos.Count;
 }
 

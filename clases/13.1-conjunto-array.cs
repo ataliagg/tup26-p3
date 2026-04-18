@@ -1,3 +1,6 @@
+// -- Conjunto con array interno --
+// En esta clase implementamos la clase Conjunto usando un array interno de enteros.
+
 static class Program {
     public static void Main() {
 
@@ -29,7 +32,11 @@ static class Program {
         Console.WriteLine($" B: {b}");      // { 10, 20 }
         Console.WriteLine($" Unión: {c}");  // { 5, 10, 20 }
 
-        var d = b & c;
+        var x = new Conjunto();
+        x.Agregar(5);
+        x.Agregar(7);
+
+        var d = b & c | x;
         Console.WriteLine($" Intersección: {d}"); // { 10 }
     }
 }
@@ -110,9 +117,7 @@ class Conjunto {
             resultado.Agregar(elemento);
         }
         foreach (var elemento in b.Elementos) {
-            if (!resultado.Contiene(elemento)) {
-                resultado.Agregar(elemento);
-            }
+            resultado.Agregar(elemento);
         }
         return resultado;
     }

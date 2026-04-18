@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+// -- Conjunto genérico con lista interna --
+// En esta clase generalizamos el conjunto para que pueda trabajar con distintos tipos de datos usando una lista interna.
 
 static class Program {
     public static void Main() {
@@ -111,7 +110,7 @@ public class Conjunto<T> : IConjunto<T> where T : IEquatable<T> {
 
     public List<T> Elementos => elementos.ToList(); // Devuelve una copia de la lista de elementos para evitar que se modifique desde afuera.
 
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
     public int Count => elementos.Count;
 }
 
@@ -151,13 +150,13 @@ class ConjuntoInt : IConjunto<int>  {
     }
 
     public List<int> Elementos => elementos.ToList(); // Devuelve una copia de la lista de elementos para evitar que se modifique desde afuera.
-
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
     public int Count => elementos.Count;
+
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
 }    
 
 // Implementamos la clase Conjunto de `string` 
-class ConjuntoString : IConjunto<string> {
+class ConjuntoString : IConjunto<string>  {
     List<string> elementos;    
 
     public ConjuntoString() {
@@ -172,20 +171,18 @@ class ConjuntoString : IConjunto<string> {
     }
 
     public void Agregar(string valor) {
-        if (!Contiene(valor)) {
-            elementos.Add(valor);
-        }
+        if (Contiene(valor)) { return; }
+        elementos.Add(valor);
     }
 
     public void Eliminar(string valor) {
+        if (!Contiene(valor)) { return; }
         elementos.Remove(valor);
     }
 
     public bool Contiene(string valor) {
         foreach (var e in elementos) {
-            if (EqualityComparer<string>.Default.Equals(e, valor)) {
-                return true;
-            }
+            if (e.Equals(valor)) { return true; }
         }
         return false;
     }
@@ -193,5 +190,5 @@ class ConjuntoString : IConjunto<string> {
     public List<string> Elementos => elementos.ToList(); 
     public int Count => elementos.Count;
 
-    public override string ToString() => "{" + string.Join(", ", elementos) + " }";
+    public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
 }
