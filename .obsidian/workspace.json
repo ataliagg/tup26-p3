@@ -181,6 +181,11 @@
   },
   "active": "94123b98dab7b572",
   "lastOpenFiles": [
+    "experimentos/agente.cs",
+    "experimentos/agente.py",
+    "experimentos/Agentecs.py",
+    "experimentos/Agentecs.cs",
+    "experimentos/agentecs.cs",
     "apuntes/04.090-Crud-efcore-sqlite-3.md",
     "apuntes/05.030-Motor-planilla.md",
     "apuntes/05.020-Tutorial-modelar-numero-con-clases.md",
@@ -206,16 +211,11 @@
     "apuntes/02.140-Linq.md",
     "apuntes/02.120-Principios-solid.md",
     "apuntes/02.130-Solid-en-librerias-dotnet.md",
-    "apuntes/04.010-Tutorial-crear-cli.md",
     "02.120-Principios-solid.pdf",
     "apuntes/__pycache__/publicar.cpython-314.pyc",
     "apuntes/renumerar_md.py",
     "apuntes/publicar.py",
     "apuntes/crear_apuntes.py",
-    "experimentos/2048-CC.html",
-    "2048-CC.html",
-    "practicos/63387 - Sosa Gonella, Luca/TP1/salida.csv",
-    "practicos/63387 - Sosa Gonella, Luca/TP1/datos.tsv",
-    "practicos/63350 - Páez Carabajal, Santiago/TP1/salida.csv"
+    "experimentos/2048-CC.html"
   ]
 }
