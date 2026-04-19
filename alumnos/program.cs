@@ -55,26 +55,20 @@ class Program {
             var detallePr = gh.ObtenerEstado(pr.Numero);
             var estado    = detallePr.Estado == "open" ? "abierto" : detallePr.Estado == "closed" ? "cerrado" : "sin dato";
             var mergeable = detallePr.EsMergeable ? "mergeable" : "con conflictos";
-            var legajo    = pr.Titulo.Split("-")[0].Trim();
-            Console.WriteLine($"\n- #{pr.Numero:D3} | {estado,-7} | {mergeable,-13} | {(commits.Count > 3 ? "🟢" : "🔴")} {commits.Count,2} | {pr.Titulo}");
-            foreach(var commit in commits) {
-                Console.WriteLine($" > {commit.FechaHora:dd-MM HH:mm} - {commit.Titulo.Substring(0, Math.Min(50, commit.Titulo.Length))} ()");
-            }
-            var archivos = gh.ListarArchivos(pr.Numero);
-            Console.WriteLine($"Archivos modificados ({archivos.Count}):");
-            foreach(var archivo in archivos) {
-                if (archivo.StartsWith($"practicos/{legajo}") ) {
-                    Console.WriteLine($" - {archivo} ✅");
-                } else {
-                    // Console.WriteLine($" - {archivo} ⚠️");
-                }
-            }
-            var a= alumnos.BuscarPorLegajo(int.Parse(legajo));
+            var legajo    = GitHub.ExtraerLegajo(pr.Titulo);
+            var tp        = GitHub.ExtraerTP(pr.Titulo);
+            // var archivos = gh.ListarArchivos(pr.Numero);
+            // if(archivos.Count < 10) {
+            //     continue;
+            // }
+            var a = alumnos.BuscarPorLegajo(legajo);
             if(a is null) {
                 Console.WriteLine($"Alumno con legajo {legajo} no encontrado en la lista de alumnos.");
                 continue;
             }
-            gh.BajarArchivo(pr.Numero, $"practicos/{legajo}*/tp1/sortx.cs", $"practicos/{a!.CarpetaNombre}/tp1");
+             Console.WriteLine($"PR #{pr.Numero} | Legajo: {legajo} | Alumno: {a.Nombre} {a.Apellido} | Estado: {estado} | Mergeable: {mergeable}");
+            // gh.BajarArchivo(pr.Numero, $"practicos/{legajo}*/tp1/sortx.cs", $"../practicos/{a!.CarpetaNombre}/tp1");
+            gh.CerrarPR(pr.Numero);
         }
         // List<string> colaboradores = gh.ListarColaboradores();
         // List<string> invitaciones  = gh.ListarInvitacionesPendientes();
