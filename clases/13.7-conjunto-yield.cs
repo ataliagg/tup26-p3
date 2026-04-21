@@ -86,20 +86,11 @@ class Conjunto<T> : IConjunto<T> where T : IEquatable<T> , IComparable<T> {
         return elementos.Contains(valor);
     }
 
-    public IEnumerator GetEnumerator() => new Enumerador(elementos);
-
-    class Enumerador(List<T> elementos) : IEnumerator<T> {
-        int indice = -1;
-
-        public T Current       => elementos[indice];
-        public bool MoveNext() => indice++ < elementos.Count;
-
-        object IEnumerator.Current => Current;
-        public void Reset() => indice = -1;
+    public IEnumerator<T> GetEnumerator() {
+        foreach (var elemento in elementos) {
+            yield return elemento;
+        }
     }
-    // Por compatibilidad con IEnumerable, también debemos implementar el método GetEnumerator sin tipo genérico.
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public override string ToString() => $"{{{string.Join(", ", elementos)}}}";
 }
-

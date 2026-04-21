@@ -33,7 +33,7 @@ record class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
         return this.Legajo == otro.Legajo;
     }
 
-    public override int GetHashCode() =>Legajo.GetHashCode(); // Para que el conjunto funcione correctamente, GetHashCode debe ser consistente con Equals.
+    public override int GetHashCode() => Legajo.GetHashCode(); // Para que el conjunto funcione correctamente, GetHashCode debe ser consistente con Equals.
     public override string ToString() => $"{Nombre} (Legajo: {Legajo})";
 }
 

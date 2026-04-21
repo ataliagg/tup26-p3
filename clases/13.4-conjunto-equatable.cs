@@ -22,7 +22,7 @@ static class Program {
     }
 }
 
-record class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
+class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
 
     public bool Equals(Alumno? otro) {
         if (otro is null) { return false; }
@@ -33,7 +33,7 @@ record class Alumno(string Nombre, int Legajo) : IEquatable<Alumno> {
     public override string ToString() => $"{Nombre} (Legajo: {Legajo})";
 }
 
-class Conjunto<T> {
+class Conjunto<T> : IEquatable<T> {
     List<T> elementos;
 
     public Conjunto() {

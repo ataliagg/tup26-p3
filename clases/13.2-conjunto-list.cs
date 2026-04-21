@@ -60,7 +60,7 @@ class Conjunto {
         return false;
     }
 
-    public List<int> Elementos => elementos.ToList(); // Devuelve una copia de la lista de elementos para evitar que se modifique desde afuera.
+    public int[] Elementos => elementos.ToArray(); // Devuelve una copia de la lista de elementos para evitar que se modifique desde afuera.
 
     // Funciones para operar con conjuntos 
     // Aprovechamos los metodos de la clase Conjunto para implementar la unión e intersección de conjuntos.
@@ -70,9 +70,7 @@ class Conjunto {
             resultado.Agregar(e);
         }
         foreach (var e in b.Elementos) {
-            if (!resultado.Contiene(e)) {
-                resultado.Agregar(e);
-            }
+            resultado.Agregar(e);
         }
         return resultado;
     }
