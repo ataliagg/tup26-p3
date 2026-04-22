@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 class Compilador {
 
     enum TipoToken {
@@ -8,6 +10,77 @@ class Compilador {
         Final
     }
     record Token(TipoToken Tipo, string Valor = "");
+    private List<Token> _tokens = new();
+    private int _posicion;
+
+    private sealed class TokenCursor {
+    private readonly Token _token;
+
+    public TokenCursor(Token token) {
+        _token = token;
+    }
+
+    public static implicit operator string(TokenCursor token) => token.ToString();
+
+    public static bool operator ==(TokenCursor token, char c) {
+        return token.ToString() == c.ToString();
+    }
+
+    public static bool operator !=(TokenCursor token, char c) {
+        return !(token == c);
+    }
+
+    public override string ToString() {
+        return _token.Tipo switch {
+            TipoToken.Numero => _token.Valor,
+            TipoToken.Variable => _token.Valor,
+            TipoToken.Suma => "+",
+            TipoToken.Resta => "-",
+            TipoToken.Multiplicacion => "*",
+            TipoToken.Division => "/",
+            TipoToken.ParentesisAbierto => "(",
+            TipoToken.ParentesisCerrado => ")",
+            TipoToken.Final => "",
+            _ => _token.Valor
+        };
+    }
+
+    public override bool Equals(object? obj) {
+        return obj is TokenCursor other && ToString() == other.ToString();
+    }
+
+    public override int GetHashCode() {
+        return ToString().GetHashCode();
+    }
+}
+
+private TokenCursor token => new(_tokens[_posicion]);
+
+private bool EsNumero(string texto) => int.TryParse(texto, out _);
+
+    private Token Actual => _tokens[_posicion];
+    private Token Consumir => _tokens[_posicion++];
+    private void AvanzarToken() => _posicion++;
+    
+    private bool Coincide(TipoToken tipo)
+    {
+        if (Actual.Tipo != tipo) {
+            return false;
+        }
+        AvanzarToken();
+        return true;
+    }
+    public static Nodo Parse(string expresion) {
+        var compilador = new Compilador();
+        compilador._tokens = compilador.Tokenizar(expresion);
+        compilador._posicion = 0;
+        var nodo = compilador.ParseExpresion();
+        if (!compilador.Coincide(TipoToken.Final)) {
+            throw new FormatException("Se esperaba el final de la expresión.");
+        }
+        return nodo;
+    }
+
 
     List<Token> Tokenizar(string expresion) {
         int posicion = 0;
@@ -58,7 +131,7 @@ class Compilador {
                     token.Add(new Token(TipoToken.ParentesisCerrado));
                     break;
                 default:
-                    throw new Exception($"Ingreso carácter inesperado: {c}");
+                    throw new FormatException($"Token inesperado: {c}");
             }
 
             continuar();
@@ -108,7 +181,7 @@ class Compilador {
                 AvanzarToken();
                 return nodo;
             } else 
-                throw new Exception("Se esperaba ')'");
+                throw new FormatException("Se esperaba ')'");
         }
         if (EsNumero(token)) {
             var valor = int.Parse(token);
@@ -119,7 +192,7 @@ class Compilador {
             AvanzarToken();
             return new NodoVariable();
         }
-        throw new Exception("Token inesperado: " + token);
+        throw new FormatException("Token inesperado: " + token);
     }
 }
 /*
