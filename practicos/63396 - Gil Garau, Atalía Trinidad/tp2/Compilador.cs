@@ -1,7 +1,5 @@
 using System.Runtime.CompilerServices;
-
 class Compilador {
-
     enum TipoToken {
         Numero, Variable,
         Suma, Resta,
@@ -12,24 +10,13 @@ class Compilador {
     record Token(TipoToken Tipo, string Valor = "");
     private List<Token> _tokens = new();
     private int _posicion;
-
     private sealed class TokenCursor {
     private readonly Token _token;
 
-    public TokenCursor(Token token) {
-        _token = token;
-    }
-
+    public TokenCursor(Token token) => _token = token;
     public static implicit operator string(TokenCursor token) => token.ToString();
-
-    public static bool operator ==(TokenCursor token, char c) {
-        return token.ToString() == c.ToString();
-    }
-
-    public static bool operator !=(TokenCursor token, char c) {
-        return !(token == c);
-    }
-
+    public static bool operator ==(TokenCursor token, char c) => token.ToString() == c.ToString();
+    public static bool operator !=(TokenCursor token, char c) => !(token == c); 
     public override string ToString() {
         return _token.Tipo switch {
             TipoToken.Numero => _token.Valor,
@@ -44,24 +31,18 @@ class Compilador {
             _ => _token.Valor
         };
     }
-
     public override bool Equals(object? obj) {
         return obj is TokenCursor other && ToString() == other.ToString();
     }
-
     public override int GetHashCode() {
         return ToString().GetHashCode();
     }
 }
-
 private TokenCursor token => new(_tokens[_posicion]);
-
 private bool EsNumero(string texto) => int.TryParse(texto, out _);
-
     private Token Actual => _tokens[_posicion];
     private Token Consumir => _tokens[_posicion++];
     private void AvanzarToken() => _posicion++;
-    
     private bool Coincide(TipoToken tipo)
     {
         if (Actual.Tipo != tipo) {
@@ -80,8 +61,6 @@ private bool EsNumero(string texto) => int.TryParse(texto, out _);
         }
         return nodo;
     }
-
-
     List<Token> Tokenizar(string expresion) {
         int posicion = 0;
         char continuar() => expresion[posicion++];
@@ -90,12 +69,10 @@ private bool EsNumero(string texto) => int.TryParse(texto, out _);
 
         while (posicion < expresion.Length) {
             char c = expresion[posicion];
-
             if (char.IsWhiteSpace(c)) {
              continuar();
                 continue;
             }
-
            if (char.IsDigit(c)) {
                 string numero = "";
                 while (posicion < expresion.Length && char.IsDigit(expresion[posicion])) {
@@ -104,13 +81,11 @@ private bool EsNumero(string texto) => int.TryParse(texto, out _);
                 token.Add(new Token(TipoToken.Numero, numero));
                 continue;
             }
-
             if (c == 'x' || c == 'X') {
                 token.Add(new Token(TipoToken.Variable, c.ToString()));
                 continuar();
                 continue;
             }
-
             switch (c) {
                 case '+':
                     token.Add(new Token(TipoToken.Suma));
@@ -133,17 +108,11 @@ private bool EsNumero(string texto) => int.TryParse(texto, out _);
                 default:
                     throw new FormatException($"Token inesperado: {c}");
             }
-
             continuar();
         }
-
         token.Add(new Token(TipoToken.Final));
         return token;
     }
-
-    // public static Nodo Parse(string expresion) {
-    //  throw new NotImplementedException("Implementar el parser para convertir la expresión en un AST.");
-    //}
     Nodo ParseTermino() {
         var nodo = ParseFactor();
         while (token == '*' || token == '/') {

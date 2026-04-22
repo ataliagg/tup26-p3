@@ -3,7 +3,6 @@ abstract class Nodo {
 }
 class NodoValor : Nodo {
     private readonly int _valor;
-
     public NodoValor(int valor) {
         _valor = valor;
     }
@@ -15,20 +14,16 @@ sealed class NumeroNodo : NodoValor {
 class NodoVariable : Nodo {
     public override int Evaluar(int x = 0) => x;
 }
-
 sealed class VariableNodo : NodoVariable { }
-
 class NodoOperacion : Nodo {
     private readonly Nodo _izquierdo;
     private readonly Nodo _derecho;
     private readonly string _operador;
-
     public NodoOperacion(Nodo izquierdo, string operador, Nodo derecho) {
         _izquierdo = izquierdo;
         _operador = operador;
         _derecho = derecho;
     }
-
     public NodoOperacion(string operador, Nodo izquierdo, Nodo derecho)
         : this(izquierdo, operador, derecho) {
     }
@@ -44,10 +39,8 @@ class NodoOperacion : Nodo {
 }
 sealed class NegativoNodo : Nodo {
     private readonly Nodo _operando;
-
     public NegativoNodo(Nodo operando) {
         _operando = operando;
     }
-
     public override int Evaluar(int x = 0) => -_operando.Evaluar(x);
 }
